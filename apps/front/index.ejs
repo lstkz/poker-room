@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0"
+    />
+    <meta
+      name="description"
+      content="Practice programming for free by solving programming challenges that reflect problems from real projects."
+    />
+    <meta name="google" content="notranslate" />
+    <title><%= htmlWebpackPlugin.options.title %></title>
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <% for (var chunk in htmlWebpackPlugin.files.css) { %>
+    <link rel="stylesheet" href="<%= htmlWebpackPlugin.files.css[chunk] %>" />
+    <% } %>
+  </head>
+
+  <body>
+    <div id="root" style="height: 100%;"></div>
+    <div id="portals"></div>
+    <% for (var chunk in htmlWebpackPlugin.files.js) { %>
+    <script src="<%= htmlWebpackPlugin.files.js[chunk] %>"></script>
+    <% } %>
+  </body>
+</html>
