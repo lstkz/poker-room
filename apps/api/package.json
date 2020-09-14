@@ -1,0 +1,47 @@
+{
+  "name": "api",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "tsc": "tsc --noEmit",
+    "start": "NODE_ENV=production ts-node -T src/app",
+    "dev": "NODE_ENV=development ts-node-dev -T src/app",
+    "test": "yarn run tsc && yarn run jest",
+    "jest": "jest"
+  },
+  "sideEffects": false,
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/compression": "^1.7.0",
+    "@types/escape-html": "^1.0.0",
+    "@types/jest": "^25.2.3",
+    "@types/marked": "^0.7.4",
+    "@types/mz": "^0.0.32",
+    "@types/node": "^14.10.1",
+    "@types/node-fetch": "^2.5.4",
+    "@types/uuid": "^3.4.6",
+    "jest": "^26.0.1",
+    "jest-watch-suspend": "^1.1.2",
+    "jest-watch-typeahead": "^0.5.0",
+    "ts-jest": "^26.0.0",
+    "ts-node-dev": "^1.0.0-pre.62"
+  },
+  "dependencies": {
+    "@types/dotenv": "^8.2.0",
+    "@types/express": "^4.17.8",
+    "@types/mongodb": "^3.5.27",
+    "body-parser": "^1.19.0",
+    "compression": "^1.7.4",
+    "contract": "*",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "mongodb": "^3.6.2",
+    "nodemon": "^1.19.1",
+    "remeda": "^0.0.22",
+    "schema": "*",
+    "shared": "*",
+    "ts-node": "^9.0.0"
+  }
+}

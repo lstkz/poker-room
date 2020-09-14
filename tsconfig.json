@@ -1,0 +1,9 @@
+{
+  "extends": "./base.tsconfig.json",
+  "compilerOptions": {
+    "target": "es2018",
+    "module": "commonjs"
+  },
+  "include": ["./api-test.ts"],
+  "exclude": ["dist"]
+}

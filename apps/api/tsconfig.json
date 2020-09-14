@@ -1,0 +1,14 @@
+{
+  "extends": "../../base.tsconfig.json",
+  "compilerOptions": {
+    "target": "es2018",
+    "module": "commonjs"
+  },
+  "include": [
+    "__tests__/**/*",
+    "src/**/*",
+    "webpack.config.js",
+    "scripts/**/*"
+  ],
+  "exclude": ["dist"]
+}
