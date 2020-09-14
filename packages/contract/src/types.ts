@@ -5,8 +5,10 @@ interface Contract4<
   ARG2 extends string,
   ARG3 extends string,
   ARG4 extends string,
-  TSchema extends { [key in ARG1 | ARG2 | ARG3 | ARG4]: Schema }
+  TSchema extends { [key in ARG1 | ARG2 | ARG3 | ARG4]: Schema },
+  R = unknown
 > {
+  returns<R>(): Contract4<ARG1, ARG2, ARG3, ARG4, TSchema, R>;
   schema<T extends { [key in ARG1 | ARG2 | ARG3 | ARG4]: Schema }>(
     param: T
   ): Contract4<ARG1, ARG2, ARG3, ARG4, T>;
@@ -17,19 +19,20 @@ interface Contract4<
       arg2: Convert<TSchema[ARG2]>,
       arg3: Convert<TSchema[ARG3]>,
       arg4: Convert<TSchema[ARG4]>
-    ) => R | void,
-    R
+    ) => Promise<R>
   >(
     fn: T
-  ): T & ContractMeta<TSchema>;
+  ): FixReturnType<T, Promise<R>> & ContractMeta<TSchema>;
 }
 
 interface Contract3<
   ARG1 extends string,
   ARG2 extends string,
   ARG3 extends string,
-  TSchema extends { [key in ARG1 | ARG2 | ARG3]: Schema }
+  TSchema extends { [key in ARG1 | ARG2 | ARG3]: Schema },
+  R = unknown
 > {
+  returns<R>(): Contract3<ARG1, ARG2, ARG3, TSchema, R>;
   schema<T extends { [key in ARG1 | ARG2 | ARG3]: Schema }>(
     param: T
   ): Contract3<ARG1, ARG2, ARG3, T>;
@@ -39,18 +42,23 @@ interface Contract3<
       arg1: Convert<TSchema[ARG1]>,
       arg2: Convert<TSchema[ARG2]>,
       arg3: Convert<TSchema[ARG3]>
-    ) => R | void,
-    R
+    ) => Promise<R>
   >(
     fn: T
-  ): T & ContractMeta<TSchema>;
+  ): FixReturnType<T, Promise<R>> & ContractMeta<TSchema>;
 }
+
+type FixReturnType<T, R> = T extends (...args: [...infer U]) => any
+  ? (...args: U) => R
+  : never;
 
 interface Contract2<
   ARG1 extends string,
   ARG2 extends string,
-  TSchema extends { [key in ARG1 | ARG2]: Schema }
+  TSchema extends { [key in ARG1 | ARG2]: Schema },
+  R = unknown
 > {
+  returns<R>(): Contract2<ARG1, ARG2, TSchema, R>;
   schema<T extends { [key in ARG1 | ARG2]: Schema }>(
     param: T
   ): Contract2<ARG1, ARG2, T>;
@@ -59,28 +67,32 @@ interface Contract2<
     T extends (
       arg1: Convert<TSchema[ARG1]>,
       arg2: Convert<TSchema[ARG2]>
-    ) => R | void,
-    R
+    ) => Promise<R>
   >(
     fn: T
-  ): T & ContractMeta<TSchema>;
+  ): FixReturnType<T, Promise<R>> & ContractMeta<TSchema>;
 }
 
 interface Contract1<
   ARG1 extends string,
-  TSchema extends { [key in ARG1]: Schema }
+  TSchema extends { [key in ARG1]: Schema },
+  R = unknown
 > {
+  returns<R>(): Contract1<ARG1, TSchema, R>;
   schema<T extends { [key in ARG1]: Schema }>(param: T): Contract1<ARG1, T>;
 
-  fn<T extends (arg1: Convert<TSchema[ARG1]>) => R | void, R>(
+  fn<T extends (arg1: Convert<TSchema[ARG1]>) => Promise<R>>(
     fn: T
-  ): T & ContractMeta<TSchema>;
+  ): FixReturnType<T, Promise<R>> & ContractMeta<TSchema>;
 }
 
-interface Contract0<TSchema extends {}> {
+interface Contract0<TSchema extends {}, R = unknown> {
+  returns<R>(): Contract0<TSchema, R>;
   schema<T extends {}>(param: T): Contract0<T>;
 
-  fn<T extends () => R | void, R>(fn: T): T & ContractMeta<TSchema>;
+  fn<T extends () => Promise<R>>(
+    fn: T
+  ): FixReturnType<T, Promise<R>> & ContractMeta<TSchema>;
 }
 
 export interface ContractMeta<TSchema> {

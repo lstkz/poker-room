@@ -16,8 +16,8 @@ export class APIClient {
   }
 
   // SIGNATURES
-  example_createFoo(values: { foo: string }): Rx.Observable<Foo> {
-    return this.call('example.createFoo', { values });
+  example_createFoo(): Rx.Observable<Foo> {
+    return this.call('example.createFoo', {});
   }
   example_getAll(): Rx.Observable<Foo[]> {
     return this.call('example.getAll', {});

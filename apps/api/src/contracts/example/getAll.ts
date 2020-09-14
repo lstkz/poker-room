@@ -5,10 +5,10 @@ import { renameId } from '../../common/helper';
 
 export const getAll = createContract('example.getAll')
   .params()
+  .returns<Foo[]>()
   .fn(async () => {
     const result = await FooTestCollection.find({}).limit(100).toArray();
-    const ret: Foo[] = result.map(renameId);
-    return ret;
+    return result.map(renameId);
   });
 
 export const getAllRpc = createRpcBinding({

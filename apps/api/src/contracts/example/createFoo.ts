@@ -7,23 +7,23 @@ import { AppUser } from '../../types';
 export const createFoo = createContract('example.createFoo')
   .params('user', 'values')
   .schema({
-    user: S.object().as<AppUser>().optional(),
+    user: S.object().optional().as<AppUser>(),
     values: S.object().keys({
       foo: S.string(),
     }),
   })
+  .returns<Foo>()
   .fn(async (user, values) => {
     const bar = 'generated-' + Date.now();
     const insertResult = await FooTestCollection.insertOne({
       foo: values.foo,
       bar,
     });
-    const ret: Foo = {
+    return {
       id: insertResult.insertedId.toHexString(),
       foo: values.foo,
       bar,
     };
-    return ret;
   });
 
 export const createFooRpc = createRpcBinding({
