@@ -40,6 +40,40 @@ function normalizeReturnType(returnType: string) {
   return returnType.replace(/Promise<(.*)>/, '$1');
 }
 
+function parseArgs(str: string) {
+  let isParamName = true;
+  let token = '';
+  let names: string[] = [];
+  let values: string[] = [];
+  for (let i = 0; i < str.length; i++) {
+    const c = str[i];
+    if (isParamName) {
+      if (c === ':') {
+        isParamName = false;
+        names.push(token);
+        token = '';
+      } else {
+        token += c;
+      }
+    } else {
+      if (c === ',') {
+        isParamName = true;
+        values.push(token);
+        token = '';
+      } else {
+        token += c;
+      }
+    }
+  }
+  values.push(token);
+  return names.map((name, i) => {
+    return {
+      name: name.trim(),
+      value: values[i].trim(),
+    };
+  });
+}
+
 function checkNode(node: ts.Node, checker: ts.TypeChecker) {
   if (node.kind !== ts.SyntaxKind.FirstStatement) {
     return;
@@ -98,6 +132,10 @@ function checkNode(node: ts.Node, checker: ts.TypeChecker) {
   let params = [] as string[];
   let paramNames = [] as string[];
   let injectUser = false;
+  let args: {
+    name: string;
+    value: string;
+  }[] = [];
   props.forEach(prop => {
     const name = (prop.name as ts.Identifier).escapedText?.toString();
 
@@ -122,22 +160,43 @@ function checkNode(node: ts.Node, checker: ts.TypeChecker) {
           // ts.TypeFormatFlags.MultilineObjectLiterals
         )
       );
+      const argParam = signature.parameters[0];
+      const argType = checker.getTypeOfSymbolAtLocation(
+        argParam,
+        argParam.valueDeclaration!
+      );
+      const argSignature = checker.typeToString(
+        argType,
+        undefined,
+        ts.TypeFormatFlags.NoTruncation
+      );
+      const str = argSignature.substr(1, argSignature.length - 2);
+      args = parseArgs(str);
+      if (args[0]?.name === 'user') {
+        args.shift();
+      }
+      // console.log({ str });
+      // console.log(parseArgs(str));
 
-      signature.parameters.forEach(param => {
-        const type = checker.getTypeOfSymbolAtLocation(
-          param,
-          param.valueDeclaration!
-        );
-        const paramName = param.escapedName.toString();
-        params.push(
-          `${paramName}: ${checker.typeToString(
-            type,
-            undefined,
-            ts.TypeFormatFlags.NoTruncation
-          )},`
-        );
-        paramNames.push(paramName);
-      });
+      // signature.parameters.forEach(param => {
+      //   const type = checker.getTypeOfSymbolAtLocation(
+      //     param,
+      //     param.valueDeclaration!
+      //   );
+      //   const paramName = param.escapedName.toString();
+      //   // console.log({ paramName });
+      //   console.log(
+      //     checker.typeToString(type, undefined, ts.TypeFormatFlags.NoTruncation)
+      //   );
+      //   params.push(
+      //     `${paramName}: ${checker.typeToString(
+      //       type,
+      //       undefined,
+      //       ts.TypeFormatFlags.NoTruncation
+      //     )},`
+      //   );
+      //   paramNames.push(paramName);
+      // });
     }
   });
 
@@ -148,9 +207,11 @@ function checkNode(node: ts.Node, checker: ts.TypeChecker) {
 
   signatures.push(
     `${signature.replace('.', '_')}(
-    ${params.join('\n')}
+    ${args.map(arg => `${arg.name}: ${arg.value}`).join(', ')}
   ): Rx.Observable<${returnType}> {
-    return this.call('${signature}', { ${paramNames.join(', ')} })
+    return this.call('${signature}', { ${args
+      .map(arg => arg.name)
+      .join(', ')} })
   }`
   );
 

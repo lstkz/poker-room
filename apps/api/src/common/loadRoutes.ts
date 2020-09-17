@@ -7,31 +7,53 @@ import { BadRequestError, UnauthorizedError } from './errors';
 import { logger } from './logger';
 import { Handler } from '../types';
 import { RpcBinding } from '../lib';
+import { AccessTokenCollection } from '../collections/AccessToken';
+import { ObjectID } from 'mongodb';
+import { UserCollection } from '../collections/User';
 
-const bindings = R.flattenDeep(
-  fs.readdirSync(Path.join(__dirname, '../contracts')).map(dir => {
-    return fs
-      .readdirSync(Path.join(__dirname, '../contracts', dir))
-      .map(fileName => {
-        const contractModule: Record<
-          string,
-          RpcBinding
-        > = require(`../contracts/${dir}/${fileName}`);
-        return Object.values(contractModule)
-          .filter(x => x.isBinding && x.type === 'rpc')
-          .map(x => x.options);
-      });
-  })
-);
+const getBindings = () =>
+  R.flattenDeep(
+    fs.readdirSync(Path.join(__dirname, '../contracts')).map(dir => {
+      return fs
+        .readdirSync(Path.join(__dirname, '../contracts', dir))
+        .map(fileName => {
+          const contractModule: Record<
+            string,
+            RpcBinding
+          > = require(`../contracts/${dir}/${fileName}`);
+          return Object.values(contractModule)
+            .filter(x => x.isBinding && x.type === 'rpc')
+            .map(x => x.options);
+        });
+    })
+  );
 
 export default function loadRoutes(router: Router) {
-  bindings.forEach(options => {
+  getBindings().forEach(options => {
     const actions: Handler[] = [
-      (req, res, next) => {
-        if (!req.headers.authorization) {
+      async (req, res, next) => {
+        const token = req.header('x-token');
+        if (!token) {
           return next();
         }
-        return next(new Error('Authentication not implemented'));
+        try {
+          const tokenEntity = await AccessTokenCollection.findOne({
+            _id: token,
+          });
+          if (!tokenEntity) {
+            return next(new UnauthorizedError('invalid token'));
+          }
+          const user = await UserCollection.findOneOrThrow({
+            _id: ObjectID.createFromHexString(tokenEntity.userId),
+          });
+          req.user = {
+            id: user._id.toHexString(),
+            username: user.username,
+          };
+          next();
+        } catch (e) {
+          next(e);
+        }
       },
       (req, res, next) => {
         if (options.public) {
@@ -72,7 +94,7 @@ export default function loadRoutes(router: Router) {
       }
       const values = params.map(x => req.body[x]);
       if (options.injectUser) {
-        values.unshift(undefined); // todo
+        values.unshift(req.user);
       }
       Promise.resolve(options.handler(...values))
         .then(ret => {
