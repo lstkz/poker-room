@@ -6,6 +6,7 @@ export interface UserModel {
   username: string;
   passwordHash: string;
   salt: string;
+  bankroll: number;
 }
 
 export const UserCollection = createCollection<UserModel>('user', [

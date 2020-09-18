@@ -1,4 +1,5 @@
 import { ContractMeta, initialize } from 'contract';
+import { S, StringSchema } from 'schema';
 import { LOG_LEVEL } from './config';
 
 export interface CreateRpcBindingOptions {
@@ -27,3 +28,13 @@ export function createRpcBinding(options: CreateRpcBindingOptions): RpcBinding {
 export const { createContract } = initialize({
   debug: LOG_LEVEL === 'debug',
 });
+
+declare module 'schema/src/StringSchema' {
+  interface StringSchema {
+    objectId(): this;
+  }
+}
+
+StringSchema.prototype.objectId = function objectId(this: StringSchema) {
+  return this.regex(/^[a-f0-9]{24}$/);
+};

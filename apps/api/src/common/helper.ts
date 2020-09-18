@@ -36,3 +36,11 @@ export async function randomString(len: number) {
   }
   return randomString;
 }
+
+export function safeAssign<T>(obj: T, values: Partial<T>) {
+  return Object.assign(obj, values);
+}
+
+export function safeKeys<T>(obj: T): Array<keyof T> {
+  return Object.keys(obj) as any;
+}

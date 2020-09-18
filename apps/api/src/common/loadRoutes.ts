@@ -1,7 +1,5 @@
 import * as R from 'remeda';
 import { Router } from 'express';
-import fs from 'fs';
-import Path from 'path';
 import { wrapExpress } from './wrapExpress';
 import { BadRequestError, UnauthorizedError } from './errors';
 import { logger } from './logger';
@@ -11,25 +9,30 @@ import { AccessTokenCollection } from '../collections/AccessToken';
 import { ObjectID } from 'mongodb';
 import { UserCollection } from '../collections/User';
 
+const bindings = [
+  require('../contracts/user/getMe'),
+  require('../contracts/user/login'),
+  require('../contracts/user/register'),
+  require('../contracts/table/createTable'),
+  require('../contracts/table/getAllTables'),
+  require('../contracts/table/joinTable'),
+  require('../contracts/table/leaveTable'),
+  require('../contracts/table/getTableById'),
+  require('../contracts/example/createFoo'),
+  require('../contracts/example/getAll'),
+];
+
 const getBindings = () =>
-  R.flattenDeep(
-    fs.readdirSync(Path.join(__dirname, '../contracts')).map(dir => {
-      return fs
-        .readdirSync(Path.join(__dirname, '../contracts', dir))
-        .map(fileName => {
-          const contractModule: Record<
-            string,
-            RpcBinding
-          > = require(`../contracts/${dir}/${fileName}`);
-          return Object.values(contractModule)
-            .filter(x => x.isBinding && x.type === 'rpc')
-            .map(x => x.options);
-        });
-    })
+  R.pipe(
+    bindings,
+    R.flatMap(obj => Object.values(obj) as RpcBinding[]),
+    R.filter(x => x.isBinding && x.type === 'rpc'),
+    R.map(x => x.options)
   );
 
 export default function loadRoutes(router: Router) {
-  getBindings().forEach(options => {
+  const bindings = getBindings();
+  bindings.forEach(options => {
     const actions: Handler[] = [
       async (req, res, next) => {
         const token = req.header('x-token');

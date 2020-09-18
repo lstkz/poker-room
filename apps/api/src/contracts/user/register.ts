@@ -4,6 +4,7 @@ import { UserCollection } from '../../collections/User';
 import { BadRequestError } from '../../common/errors';
 import { generateSalt, hashPassword } from '../../common/helper';
 import { DUPLICATED_UNIQUE_VALUE_ERROR_CODE } from '../../common/mongo';
+import { INITIAL_BANKROLL } from '../../config';
 import { createContract, createRpcBinding } from '../../lib';
 import { generateAuthData } from './generateAuthData';
 
@@ -20,6 +21,7 @@ export const register = createContract('user.register')
       username: values.username,
       passwordHash,
       salt,
+      bankroll: INITIAL_BANKROLL,
     }).catch(e => {
       if (e.code === DUPLICATED_UNIQUE_VALUE_ERROR_CODE) {
         throw new BadRequestError('Username is already taken');

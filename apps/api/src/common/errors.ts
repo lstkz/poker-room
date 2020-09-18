@@ -35,3 +35,9 @@ export class ForbiddenError extends HttpError {
     super(403, message);
   }
 }
+
+export class TableNotFoundError extends BadRequestError {
+  constructor() {
+    super('Table not found');
+  }
+}
