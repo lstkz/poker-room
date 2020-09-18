@@ -3,7 +3,7 @@ import { ajax, AjaxRequest } from 'rxjs/ajax';
 import { map } from 'rxjs/operators';
 
 // IMPORTS
-import { Foo } from './types';
+import { Foo, User, AuthData } from './types';
 // IMPORTS END
 
 export class APIClient {
@@ -16,11 +16,26 @@ export class APIClient {
   }
 
   // SIGNATURES
-  example_createFoo(): Rx.Observable<Foo> {
-    return this.call('example.createFoo', {});
+  example_createFoo(values: { foo: string }): Rx.Observable<Foo> {
+    return this.call('example.createFoo', { values });
   }
   example_getAll(): Rx.Observable<Foo[]> {
     return this.call('example.getAll', {});
+  }
+  user_getMe(): Rx.Observable<User> {
+    return this.call('user.getMe', {});
+  }
+  user_login(values: {
+    username: string;
+    password: string;
+  }): Rx.Observable<AuthData> {
+    return this.call('user.login', { values });
+  }
+  user_register(values: {
+    username: string;
+    password: string;
+  }): Rx.Observable<AuthData> {
+    return this.call('user.register', { values });
   }
   // SIGNATURES END
   private call(name: string, params: any): any {

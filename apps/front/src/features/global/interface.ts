@@ -1,3 +1,4 @@
+import { User } from 'shared';
 import { createModule } from 'typeless';
 import { GlobalSymbol } from './symbol';
 
@@ -5,11 +6,16 @@ import { GlobalSymbol } from './symbol';
 export const [handle, GlobalActions, getGlobalState] = createModule(
   GlobalSymbol
 )
-  .withActions({})
+  .withActions({
+    $mounted: null,
+    loaded: (user: User | null) => ({ payload: { user } }),
+    loggedIn: (user: User) => ({ payload: { user } }),
+    logout: null,
+  })
   .withState<GlobalState>();
 
 // --- Types ---
 export interface GlobalState {
   isLoaded: boolean;
-  user: {} | null; // todo
+  user: User | null;
 }
