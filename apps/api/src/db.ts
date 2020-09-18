@@ -45,6 +45,13 @@ export async function connect() {
   return client;
 }
 
+export async function startSession() {
+  if (!client) {
+    throw new Error('Not connected');
+  }
+  return client.startSession();
+}
+
 function getClient() {
   if (!client) {
     throw new Error('client is not set');
