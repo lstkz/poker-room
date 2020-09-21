@@ -30,3 +30,10 @@ export interface Table {
   maxSeats: number;
   players: TablePlayer[];
 }
+
+export type MoveType = 'call' | 'check' | 'fold' | 'raise';
+
+export interface Card {
+  card: 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 'T' | 'J' | 'Q' | 'K' | 'A';
+  color: 'c' | 'd' | 'h' | 's';
+}

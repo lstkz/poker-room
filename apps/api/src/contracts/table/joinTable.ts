@@ -1,12 +1,24 @@
 import { ClientSession, ObjectID } from 'mongodb';
 import { S } from 'schema';
 import { Table } from 'shared';
+import {
+  GameCollection,
+  GameModel,
+  GamePlayerInfo,
+} from '../../collections/Game';
 import { TableCollection } from '../../collections/Table';
 import { UserCollection } from '../../collections/User';
+import { CardRandomizer } from '../../common/engine';
 import { BadRequestError, TableNotFoundError } from '../../common/errors';
+import { randomItem } from '../../common/helper';
 import { MIN_ENTRY_PERCENT } from '../../config';
 import { startSession } from '../../db';
-import { createContract, createRpcBinding } from '../../lib';
+import { dispatch } from '../../events/dispatch';
+import {
+  createContract,
+  createEventBinding,
+  createRpcBinding,
+} from '../../lib';
 import { AppUser } from '../../types';
 import { getTableById } from './getTableById';
 
@@ -72,6 +84,13 @@ export const joinTable = createContract('table.joinTable')
     } finally {
       await session.endSession();
     }
+    dispatch({
+      type: 'PLAYER_JOINED',
+      payload: {
+        tableId: values.tableId,
+        userId: user.id,
+      },
+    });
     return getTableById(values.tableId);
   });
 
@@ -79,4 +98,67 @@ export const joinTableRpc = createRpcBinding({
   injectUser: true,
   signature: 'table.joinTable',
   handler: joinTable,
+});
+
+export const joinTableEvent = createEventBinding({
+  type: 'PLAYER_JOINED',
+  handler: async payload => {
+    let session: ClientSession = null!;
+    try {
+      session = await startSession();
+      await session.withTransaction(async () => {
+        const table = await TableCollection.findOneOrThrow({
+          _id: ObjectID.createFromHexString(payload.tableId),
+        });
+        if (table.gameId || table.players.length < 3) {
+          return;
+        }
+        const cr = new CardRandomizer();
+        const players = await Promise.all(
+          table.players
+            .sort((a, b) => a.seat - b.seat)
+            .map(async player => {
+              const mapped: GamePlayerInfo = {
+                userId: player.userId,
+                hand: [await cr.randomNextCard(), await cr.randomNextCard()],
+                seat: player.seat,
+                money: player.money,
+              };
+              return mapped;
+            })
+        );
+        const gameValues: Omit<GameModel, '_id'> = {
+          isPlaying: true,
+          tableId: table._id,
+          pot: 0,
+          players,
+          moves: [],
+          dealerPosition: (await randomItem(table.players)).seat,
+        };
+        const sb = table.stakes / 200;
+        gameValues.pot += 3 * sb;
+
+        const dealerPlayer = players.findIndex(
+          x => x.seat === gameValues.dealerPosition
+        );
+        const sbPlayer = players[(dealerPlayer + 1) % players.length];
+        const bbPlayer = players[(dealerPlayer + 2) % players.length];
+        sbPlayer.money -= sb;
+        bbPlayer.money -= 2 * sb;
+
+        const gameInsert = await GameCollection.insertOne(gameValues);
+        table.gameId = gameInsert.insertedId;
+        await TableCollection.update(table, ['gameId']);
+        dispatch({
+          type: 'GAME_STARTED',
+          payload: {
+            tableId: payload.tableId,
+            gameId: gameInsert.insertedId.toHexString(),
+          },
+        });
+      });
+    } finally {
+      await session.endSession();
+    }
+  },
 });

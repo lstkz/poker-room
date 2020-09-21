@@ -25,13 +25,16 @@ export async function hashPassword(password: string, salt: string) {
   return buffer.toString('hex');
 }
 
+export async function randomInt() {
+  return (await crypto.randomBytes(4)).readUInt32BE(0);
+}
+
 export async function randomString(len: number) {
   const charSet =
     'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   let randomString = '';
   for (let i = 0; i < len; i++) {
-    let randomPoz =
-      (await crypto.randomBytes(4)).readUInt32BE(0) % charSet.length;
+    let randomPoz = (await randomInt()) % charSet.length;
     randomString += charSet[randomPoz];
   }
   return randomString;
@@ -43,4 +46,9 @@ export function safeAssign<T>(obj: T, values: Partial<T>) {
 
 export function safeKeys<T>(obj: T): Array<keyof T> {
   return Object.keys(obj) as any;
+}
+
+export async function randomItem<T>(items: T[]) {
+  const idx = (await randomInt()) % items.length;
+  return items[idx];
 }

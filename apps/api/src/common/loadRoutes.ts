@@ -4,34 +4,13 @@ import { wrapExpress } from './wrapExpress';
 import { BadRequestError, UnauthorizedError } from './errors';
 import { logger } from './logger';
 import { Handler } from '../types';
-import { RpcBinding } from '../lib';
 import { AccessTokenCollection } from '../collections/AccessToken';
 import { ObjectID } from 'mongodb';
 import { UserCollection } from '../collections/User';
-
-const bindings = [
-  require('../contracts/user/getMe'),
-  require('../contracts/user/login'),
-  require('../contracts/user/register'),
-  require('../contracts/table/createTable'),
-  require('../contracts/table/getAllTables'),
-  require('../contracts/table/joinTable'),
-  require('../contracts/table/leaveTable'),
-  require('../contracts/table/getTableById'),
-  require('../contracts/example/createFoo'),
-  require('../contracts/example/getAll'),
-];
-
-const getBindings = () =>
-  R.pipe(
-    bindings,
-    R.flatMap(obj => Object.values(obj) as RpcBinding[]),
-    R.filter(x => x.isBinding && x.type === 'rpc'),
-    R.map(x => x.options)
-  );
+import { getBindings } from './bindings';
 
 export default function loadRoutes(router: Router) {
-  const bindings = getBindings();
+  const bindings = getBindings('rpc');
   bindings.forEach(options => {
     const actions: Handler[] = [
       async (req, res, next) => {

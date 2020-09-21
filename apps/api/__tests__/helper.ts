@@ -1,3 +1,4 @@
+import * as R from 'remeda';
 import { ContractMeta } from 'contract';
 import { ObjectID } from 'mongodb';
 import { Convert } from 'schema';
@@ -86,33 +87,26 @@ export function getTestUserId(nr: number) {
 }
 
 export async function generateSampleUsers() {
-  await UserCollection.insertMany([
-    {
-      _id: ObjectID.createFromHexString(getTestUserId(1)),
-      username: 'user1',
-      bankroll: INITIAL_BANKROLL,
-      passwordHash: 'salt',
-      salt: 'salt',
-    },
-    {
-      _id: ObjectID.createFromHexString(getTestUserId(2)),
-      username: 'user2',
-      bankroll: INITIAL_BANKROLL,
-      passwordHash: 'salt',
-      salt: 'salt',
-    },
-  ]);
-
-  await AccessTokenCollection.insertMany([
-    {
-      _id: 'token_1',
-      userId: getTestUserId(1),
-    },
-    {
-      _id: 'token_2',
-      userId: getTestUserId(2),
-    },
-  ]);
+  const nrs = R.range(1, 10);
+  await UserCollection.insertMany(
+    nrs.map(nr => {
+      return {
+        _id: ObjectID.createFromHexString(getTestUserId(nr)),
+        username: 'user' + nr,
+        bankroll: INITIAL_BANKROLL,
+        passwordHash: 'salt',
+        salt: 'salt',
+      };
+    })
+  );
+  await AccessTokenCollection.insertMany(
+    nrs.map(nr => {
+      return {
+        _id: 'token_' + nr,
+        userId: getTestUserId(nr),
+      };
+    })
+  );
 }
 
 export function getTestTableId(nr: number) {
@@ -127,6 +121,7 @@ export async function generateSampleTables() {
       name: 't1',
       players: [],
       stakes: 50,
+      gameId: null,
     },
     {
       _id: ObjectID.createFromHexString(getTestTableId(2)),
@@ -134,6 +129,7 @@ export async function generateSampleTables() {
       name: 't2',
       players: [],
       stakes: 100,
+      gameId: null,
     },
   ]);
 }

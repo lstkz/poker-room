@@ -22,6 +22,7 @@ export const createTable = createContract('table.createTable')
       await TableCollection.insertOne({
         ...values,
         players: [],
+        gameId: null,
       });
     }
   });
