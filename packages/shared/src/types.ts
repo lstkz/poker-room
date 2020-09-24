@@ -31,7 +31,7 @@ export interface Table {
   players: TablePlayer[];
 }
 
-export type MoveType = 'call' | 'check' | 'fold' | 'raise';
+export type MoveType = 'call' | 'check' | 'fold' | 'raise' | 'all-in';
 
 export interface Card {
   card: 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 'T' | 'J' | 'Q' | 'K' | 'A';

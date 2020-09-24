@@ -1,5 +1,13 @@
 import * as R from 'remeda';
-import { CardRandomizer } from '../src/common/engine';
+import { CardRandomizer } from '../../src/common/engine';
+
+jest.mock('../../src/common/random', () => {
+  return {
+    async randomInt() {
+      return 0;
+    },
+  };
+});
 
 describe('CardRandomizer', () => {
   it('should return all cards', () => {
@@ -29,5 +37,39 @@ describe('CardRandomizer', () => {
       })
     );
     expect(cards.size).toEqual(52);
+  });
+
+  it('should not random initial cards', async () => {
+    const cr = new CardRandomizer([
+      {
+        card: 2,
+        color: 'c',
+      },
+      {
+        card: 2,
+        color: 'd',
+      },
+    ]);
+    const cards = [
+      await cr.randomNextCard(),
+      await cr.randomNextCard(),
+      await cr.randomNextCard(),
+    ];
+    expect(cards).toMatchInlineSnapshot(`
+      Array [
+        Object {
+          "card": 2,
+          "color": "h",
+        },
+        Object {
+          "card": 2,
+          "color": "s",
+        },
+        Object {
+          "card": 3,
+          "color": "c",
+        },
+      ]
+    `);
   });
 });

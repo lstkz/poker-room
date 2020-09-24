@@ -133,3 +133,7 @@ export async function generateSampleTables() {
     },
   ]);
 }
+
+export function getId(nr: number) {
+  return ObjectID.createFromHexString('00000000000000000000000' + nr);
+}

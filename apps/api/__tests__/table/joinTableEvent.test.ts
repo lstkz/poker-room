@@ -17,6 +17,14 @@ import {
 
 jest.mock('../../src/events/dispatch');
 
+jest.mock('../../src/common/random', () => {
+  return {
+    async randomInt() {
+      return 0;
+    },
+  };
+});
+
 const dispatch = mocked(_dispatch, false);
 
 beforeAll(async () => {
@@ -77,5 +85,75 @@ it('should start the game for 3 players', async () => {
   const game = await GameCollection.findOneOrThrow({
     _id: table.gameId!,
   });
-  expect(game.pot).toEqual(0.75);
+  game._id = ObjectID.createFromTime(1);
+  expect(game).toMatchInlineSnapshot(`
+    Object {
+      "_id": "000000010000000000000000",
+      "betMap": Object {
+        "000000000000000000000002": 0.25,
+        "000000000000000000000003": 0.5,
+      },
+      "currentBets": Array [
+        0.5,
+      ],
+      "dealerPosition": 1,
+      "isPlaying": true,
+      "phases": Array [
+        Object {
+          "moves": Array [],
+          "type": "pre-flop",
+        },
+      ],
+      "players": Array [
+        Object {
+          "hand": Array [
+            Object {
+              "card": 2,
+              "color": "c",
+            },
+            Object {
+              "card": 2,
+              "color": "s",
+            },
+          ],
+          "money": 50,
+          "seat": 1,
+          "userId": "000000000000000000000001",
+        },
+        Object {
+          "hand": Array [
+            Object {
+              "card": 2,
+              "color": "d",
+            },
+            Object {
+              "card": 3,
+              "color": "c",
+            },
+          ],
+          "money": 49.75,
+          "seat": 2,
+          "userId": "000000000000000000000002",
+        },
+        Object {
+          "hand": Array [
+            Object {
+              "card": 2,
+              "color": "h",
+            },
+            Object {
+              "card": 3,
+              "color": "d",
+            },
+          ],
+          "money": 49.5,
+          "seat": 3,
+          "userId": "000000000000000000000003",
+        },
+      ],
+      "pot": 0,
+      "stakes": 50,
+      "tableId": "100000000000000000000001",
+    }
+  `);
 });

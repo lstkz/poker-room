@@ -8,6 +8,14 @@ interface GameMove {
   amount: number;
 }
 
+type GamePhaseType = 'pre-flop' | 'flop' | 'turn' | 'river';
+
+interface GamePhase {
+  type: GamePhaseType;
+  moves: GameMove[];
+  cards: Card[];
+}
+
 export interface GamePlayerInfo {
   userId: ObjectID;
   hand: [Card, Card];
@@ -18,11 +26,14 @@ export interface GamePlayerInfo {
 export interface GameModel {
   _id: ObjectID;
   isPlaying: boolean;
-  pot: number;
   tableId: ObjectID;
-  moves: GameMove[];
+  phases: GamePhase[];
   dealerPosition: number;
   players: GamePlayerInfo[];
+  stakes: number;
+  pot: number;
+  betMap: Record<string, number>;
+  currentBets: number[];
 }
 
 export const GameCollection = createCollection<GameModel>('game');

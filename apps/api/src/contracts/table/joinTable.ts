@@ -8,7 +8,7 @@ import {
 } from '../../collections/Game';
 import { TableCollection } from '../../collections/Table';
 import { UserCollection } from '../../collections/User';
-import { CardRandomizer } from '../../common/engine';
+import { CardRandomizer, getBB } from '../../common/engine';
 import { BadRequestError, TableNotFoundError } from '../../common/errors';
 import { randomItem } from '../../common/helper';
 import { MIN_ENTRY_PERCENT } from '../../config';
@@ -127,24 +127,28 @@ export const joinTableEvent = createEventBinding({
               return mapped;
             })
         );
+        const bb = getBB(table.stakes);
         const gameValues: Omit<GameModel, '_id'> = {
           isPlaying: true,
           tableId: table._id,
           pot: 0,
+          stakes: table.stakes,
+          currentBets: [bb],
           players,
-          moves: [],
+          phases: [{ type: 'pre-flop', moves: [] }],
           dealerPosition: (await randomItem(table.players)).seat,
+          betMap: {},
         };
-        const sb = table.stakes / 200;
-        gameValues.pot += 3 * sb;
 
         const dealerPlayer = players.findIndex(
           x => x.seat === gameValues.dealerPosition
         );
         const sbPlayer = players[(dealerPlayer + 1) % players.length];
         const bbPlayer = players[(dealerPlayer + 2) % players.length];
-        sbPlayer.money -= sb;
-        bbPlayer.money -= 2 * sb;
+        sbPlayer.money -= bb / 2;
+        bbPlayer.money -= bb;
+        gameValues.betMap[sbPlayer.userId.toHexString()] = bb / 2;
+        gameValues.betMap[bbPlayer.userId.toHexString()] = bb;
 
         const gameInsert = await GameCollection.insertOne(gameValues);
         table.gameId = gameInsert.insertedId;

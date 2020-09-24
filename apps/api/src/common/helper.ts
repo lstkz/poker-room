@@ -1,4 +1,5 @@
 import crypto from 'mz/crypto';
+import { randomInt } from './random';
 
 export function renameId<T extends { _id: any }>(
   obj: T
@@ -23,10 +24,6 @@ export async function hashPassword(password: string, salt: string) {
     'sha512'
   );
   return buffer.toString('hex');
-}
-
-export async function randomInt() {
-  return (await crypto.randomBytes(4)).readUInt32BE(0);
 }
 
 export async function randomString(len: number) {
