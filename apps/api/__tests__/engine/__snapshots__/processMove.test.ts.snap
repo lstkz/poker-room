@@ -11,9 +11,11 @@ Object {
     0.5,
   ],
   "dealerPosition": 1,
-  "isPlaying": true,
+  "isDone": false,
+  "isStarted": true,
   "phases": Array [
     Object {
+      "cards": Array [],
       "moves": Array [
         Object {
           "amount": 0,
@@ -78,9 +80,11 @@ Object {
     0.5,
   ],
   "dealerPosition": 1,
-  "isPlaying": true,
+  "isDone": false,
+  "isStarted": true,
   "phases": Array [
     Object {
+      "cards": Array [],
       "moves": Array [
         Object {
           "amount": 0,
@@ -140,9 +144,11 @@ Object {
     0.5,
   ],
   "dealerPosition": 1,
-  "isPlaying": true,
+  "isDone": false,
+  "isStarted": true,
   "phases": Array [
     Object {
+      "cards": Array [],
       "moves": Array [
         Object {
           "amount": 0,
@@ -197,9 +203,11 @@ Object {
     0.5,
   ],
   "dealerPosition": 1,
-  "isPlaying": true,
+  "isDone": false,
+  "isStarted": true,
   "phases": Array [
     Object {
+      "cards": Array [],
       "moves": Array [
         Object {
           "amount": 0,
@@ -251,9 +259,11 @@ Object {
     2,
   ],
   "dealerPosition": 1,
-  "isPlaying": true,
+  "isDone": false,
+  "isStarted": true,
   "phases": Array [
     Object {
+      "cards": Array [],
       "moves": Array [
         Object {
           "amount": 2,
@@ -322,9 +332,11 @@ Object {
     5,
   ],
   "dealerPosition": 1,
-  "isPlaying": true,
+  "isDone": false,
+  "isStarted": true,
   "phases": Array [
     Object {
+      "cards": Array [],
       "moves": Array [
         Object {
           "amount": 2,

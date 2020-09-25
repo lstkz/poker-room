@@ -99,7 +99,6 @@ it('user should leave successfully', async () => {
   );
   expect(ret).toMatchInlineSnapshot(`
     Object {
-      "gameId": null,
       "id": "100000000000000000000001",
       "maxSeats": 6,
       "name": "t1",
@@ -147,7 +146,6 @@ it('join 2 users and 1 user should leave successfully', async () => {
   );
   expect(ret).toMatchInlineSnapshot(`
     Object {
-      "gameId": null,
       "id": "100000000000000000000001",
       "maxSeats": 6,
       "name": "t1",

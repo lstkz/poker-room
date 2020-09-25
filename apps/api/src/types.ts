@@ -19,6 +19,10 @@ export type AppEvent =
   | {
       type: 'GAME_STARTED';
       payload: { tableId: string; gameId: string };
+    }
+  | {
+      type: 'GAME_UPDATED';
+      payload: { gameId: string };
     };
 
 type ExtractType<T> = T extends { type: infer S } ? S : never;

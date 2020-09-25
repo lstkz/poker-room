@@ -162,6 +162,7 @@ export function processMove(
   },
   game: GameModel
 ) {
+  validateMove(values, game);
   const phase = R.last(game.phases)!;
   const player = getActPlayer(game);
   const currentBet = R.last(game.currentBets)!;
@@ -251,6 +252,17 @@ export async function processNextPhase(game: GameModel) {
     return;
   }
   const cr = getCardRandomizer(game);
+  let sum = 0;
+  const playerMap = R.indexBy(game.players, x => x.userId);
+  Object.keys(game.betMap).forEach(userId => {
+    const bet = game.betMap[userId];
+    sum += bet;
+    playerMap[userId].money -= bet;
+  });
+  game.pot += sum;
+  game.betMap = {};
+  game.currentBets = [];
+
   // preflop -> flop
   if (game.phases.length === 1) {
     game.phases.push({
@@ -262,14 +274,25 @@ export async function processNextPhase(game: GameModel) {
         cr.randomNextCard(),
       ]),
     });
-    let sum = 0;
-    const playerMap = R.indexBy(game.players, x => x.userId);
-    Object.keys(game.betMap).forEach(userId => {
-      const bet = game.betMap[userId];
-      sum += bet;
-      playerMap[userId].money -= bet;
+  }
+  // flop -> turn
+  else if (game.phases.length === 2) {
+    game.phases.push({
+      moves: [],
+      type: 'turn',
+      cards: await Promise.all([cr.randomNextCard()]),
     });
-    game.pot += sum;
-    game.betMap = {};
+  }
+  // turn -> river
+  else if (game.phases.length === 3) {
+    game.phases.push({
+      moves: [],
+      type: 'river',
+      cards: await Promise.all([cr.randomNextCard()]),
+    });
+  }
+  // river -> showdown
+  else if (game.phases.length === 4) {
+    game.isDone = true;
   }
 }

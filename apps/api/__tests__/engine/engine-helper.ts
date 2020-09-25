@@ -1,7 +1,7 @@
 import { ObjectID } from 'mongodb';
 import { Card } from 'shared';
 import { GameModel, GamePlayerInfo } from '../../src/collections/Game';
-import { processMove } from '../../src/common/engine';
+import { processMove, processNextPhase } from '../../src/common/engine';
 import { getId } from '../helper';
 
 function getCardFromSymbol(cardSymbol: string) {
@@ -49,7 +49,8 @@ export function getPreflopGame(): GameModel {
   const bb = 0.5;
   return {
     _id: ObjectID.createFromTime(1),
-    isPlaying: true,
+    isDone: false,
+    isStarted: true,
     tableId: null!,
     pot: 0,
     currentBets: [bb],
@@ -77,6 +78,30 @@ export function getPreflopGame(): GameModel {
       _getPlayer(6),
     ],
   };
+}
+
+async function _callAll(game: GameModel) {
+  chainMove(game).raise(0.5).call().call().call();
+  await processNextPhase(game);
+}
+
+export async function getFlopGame() {
+  const game = getPreflopGame();
+  chainMove(game).call().call().call().check();
+  await processNextPhase(game);
+  return game;
+}
+
+export async function getTurnGame() {
+  const game = await getFlopGame();
+  await _callAll(game);
+  return game;
+}
+
+export async function getRiverGame() {
+  const game = await getTurnGame();
+  await _callAll(game);
+  return game;
 }
 
 class ChainMove {

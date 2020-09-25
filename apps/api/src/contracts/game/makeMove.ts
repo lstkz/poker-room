@@ -1,11 +1,15 @@
 import { ClientSession, ObjectID } from 'mongodb';
-import * as R from 'remeda';
 import { S } from 'schema';
 import { MoveType, moveTypes } from 'shared';
 import { GameCollection } from '../../collections/Game';
-import { getActPlayer, processMove, validateMove } from '../../common/engine';
-import { BadRequestError, UnreachableCaseError } from '../../common/errors';
+import {
+  getActPlayer,
+  processMove,
+  processNextPhase,
+} from '../../common/engine';
+import { BadRequestError } from '../../common/errors';
 import { startSession } from '../../db';
+import { dispatch } from '../../events/dispatch';
 import { createContract, createRpcBinding } from '../../lib';
 import { AppUser } from '../../types';
 
@@ -31,16 +35,13 @@ export const makeMove = createContract('game.makeMove')
         if (!game) {
           throw new BadRequestError('Game not found');
         }
-        if (!game.isPlaying) {
+        if (!game.isDone) {
           throw new BadRequestError('Game is finished');
         }
-        validateMove(
-          {
-            moveType: values.moveType,
-            raiseAmount: values.raiseAmount,
-          },
-          game
-        );
+        const actPlayer = getActPlayer(game);
+        if (!actPlayer.userId.equals(user.id)) {
+          throw new BadRequestError("It's not your turn");
+        }
         processMove(
           {
             moveType: values.moveType,
@@ -48,18 +49,11 @@ export const makeMove = createContract('game.makeMove')
           },
           game
         );
-
-        // const actPlayer = getActPlayer(game);
-        // if (!actPlayer.userId.equals(user.id)) {
-        //   throw new BadRequestError("It's not your turn");
-        // }
-        // const phase = R.last(game.phases)!;
-        // const lastMove = R.last(phase.moves);
-        // const nextMove = {
-        //   userId: ObjectID.createFromHexString(user.id),
-        //   amount: values.raiseAmount ?? 0,
-        //   moveType: values.moveType,
-        // };
+        await processNextPhase(game);
+        dispatch({
+          type: 'GAME_UPDATED',
+          payload: { gameId: game._id.toHexString() },
+        });
       });
     } finally {
       await session.endSession();

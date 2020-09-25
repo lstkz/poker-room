@@ -7,6 +7,7 @@ export interface Foo {
 export interface User {
   id: string;
   username: string;
+  isAdmin: boolean;
 }
 
 export interface AuthData {

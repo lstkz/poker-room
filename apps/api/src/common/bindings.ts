@@ -14,6 +14,7 @@ const bindings = [
   require('../contracts/table/joinTable'),
   require('../contracts/table/leaveTable'),
   require('../contracts/table/getTableById'),
+  require('../contracts/table/createTable'),
   require('../contracts/example/createFoo'),
   require('../contracts/example/getAll'),
 ];

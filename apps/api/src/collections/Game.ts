@@ -25,7 +25,8 @@ export interface GamePlayerInfo {
 
 export interface GameModel {
   _id: ObjectID;
-  isPlaying: boolean;
+  isStarted: boolean;
+  isDone: boolean;
   tableId: ObjectID;
   phases: GamePhase[];
   dealerPosition: number;

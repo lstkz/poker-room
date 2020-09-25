@@ -195,7 +195,6 @@ it('user should join the table successfully', async () => {
   );
   expect(ret).toMatchInlineSnapshot(`
     Object {
-      "gameId": null,
       "id": "100000000000000000000001",
       "maxSeats": 6,
       "name": "t1",
@@ -231,7 +230,6 @@ it('two user should join the table successfully', async () => {
   );
   expect(ret).toMatchInlineSnapshot(`
     Object {
-      "gameId": null,
       "id": "100000000000000000000001",
       "maxSeats": 6,
       "name": "t1",

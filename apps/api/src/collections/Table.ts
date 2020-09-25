@@ -14,7 +14,7 @@ export interface TableModel {
   stakes: number;
   maxSeats: number;
   players: TablePlayer[];
-  gameId: ObjectID | null;
+  gameId: ObjectID;
 }
 
 export const TableCollection = createCollection<TableModel>('table', [

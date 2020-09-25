@@ -1,7 +1,7 @@
 import * as R from 'remeda';
 import { Router } from 'express';
 import { wrapExpress } from './wrapExpress';
-import { BadRequestError, UnauthorizedError } from './errors';
+import { BadRequestError, ForbiddenError, UnauthorizedError } from './errors';
 import { logger } from './logger';
 import { Handler } from '../types';
 import { AccessTokenCollection } from '../collections/AccessToken';
@@ -31,6 +31,7 @@ export default function loadRoutes(router: Router) {
           req.user = {
             id: user._id.toHexString(),
             username: user.username,
+            isAdmin: user.isAdmin ?? false,
           };
           next();
         } catch (e) {
@@ -44,6 +45,10 @@ export default function loadRoutes(router: Router) {
         }
         if (!req.user) {
           next(new UnauthorizedError('Bearer token required'));
+          return;
+        }
+        if (!req.user.isAdmin && options.admin) {
+          next(new ForbiddenError('Admin only'));
           return;
         }
         next();

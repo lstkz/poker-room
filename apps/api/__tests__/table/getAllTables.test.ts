@@ -37,7 +37,6 @@ it('should return tables', async () => {
   expect(ret).toMatchInlineSnapshot(`
     Array [
       Object {
-        "gameId": null,
         "id": "id",
         "maxSeats": 5,
         "name": "t1",
@@ -45,7 +44,6 @@ it('should return tables', async () => {
         "stakes": 50,
       },
       Object {
-        "gameId": null,
         "id": "id",
         "maxSeats": 5,
         "name": "t2",

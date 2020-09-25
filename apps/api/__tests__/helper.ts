@@ -96,6 +96,7 @@ export async function generateSampleUsers() {
         bankroll: INITIAL_BANKROLL,
         passwordHash: 'salt',
         salt: 'salt',
+        isAdmin: nr === 1,
       };
     })
   );
@@ -121,7 +122,7 @@ export async function generateSampleTables() {
       name: 't1',
       players: [],
       stakes: 50,
-      gameId: null,
+      gameId: null!,
     },
     {
       _id: ObjectID.createFromHexString(getTestTableId(2)),
@@ -129,7 +130,7 @@ export async function generateSampleTables() {
       name: 't2',
       players: [],
       stakes: 100,
-      gameId: null,
+      gameId: null!,
     },
   ]);
 }

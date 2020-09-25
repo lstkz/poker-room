@@ -129,13 +129,13 @@ export const joinTableEvent = createEventBinding({
         );
         const bb = getBB(table.stakes);
         const gameValues: Omit<GameModel, '_id'> = {
-          isPlaying: true,
+          isDone: true,
           tableId: table._id,
           pot: 0,
           stakes: table.stakes,
           currentBets: [bb],
           players,
-          phases: [{ type: 'pre-flop', moves: [] }],
+          phases: [{ type: 'pre-flop', moves: [], cards: [] }],
           dealerPosition: (await randomItem(table.players)).seat,
           betMap: {},
         };

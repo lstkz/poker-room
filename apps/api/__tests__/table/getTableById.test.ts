@@ -58,7 +58,6 @@ it('should return a table', async () => {
   );
   expect(ret).toMatchInlineSnapshot(`
     Object {
-      "gameId": null,
       "id": "100000000000000000000001",
       "maxSeats": 6,
       "name": "t1",

@@ -97,9 +97,10 @@ it('should start the game for 3 players', async () => {
         0.5,
       ],
       "dealerPosition": 1,
-      "isPlaying": true,
+      "isDone": true,
       "phases": Array [
         Object {
+          "cards": Array [],
           "moves": Array [],
           "type": "pre-flop",
         },
