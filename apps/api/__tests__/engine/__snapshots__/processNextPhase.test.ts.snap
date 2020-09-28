@@ -115,6 +115,133 @@ Object {
 }
 `;
 
+exports[`processNextPhase should not process to next phase preflop, call -> call -> call 1`] = `
+Object {
+  "_id": "000000010000000000000000",
+  "betMap": Object {
+    "000000000000000000000001": 0.5,
+    "000000000000000000000002": 0.5,
+    "000000000000000000000004": 0.5,
+    "000000000000000000000006": 0.5,
+  },
+  "currentBets": Array [
+    0.5,
+  ],
+  "dealerPosition": 1,
+  "isDone": false,
+  "isStarted": true,
+  "phases": Array [
+    Object {
+      "cards": Array [],
+      "moves": Array [
+        Object {
+          "amount": 0.5,
+          "moveType": "call",
+          "userId": "000000000000000000000006",
+        },
+        Object {
+          "amount": 0.5,
+          "moveType": "call",
+          "userId": "000000000000000000000001",
+        },
+        Object {
+          "amount": 0.5,
+          "moveType": "call",
+          "userId": "000000000000000000000002",
+        },
+      ],
+      "type": "pre-flop",
+    },
+  ],
+  "players": Array [
+    Object {
+      "money": 50,
+      "seat": 1,
+      "userId": "000000000000000000000001",
+    },
+    Object {
+      "money": 50,
+      "seat": 2,
+      "userId": "000000000000000000000002",
+    },
+    Object {
+      "money": 50,
+      "seat": 4,
+      "userId": "000000000000000000000004",
+    },
+    Object {
+      "money": 50,
+      "seat": 6,
+      "userId": "000000000000000000000006",
+    },
+  ],
+  "pot": 0,
+  "stakes": 50,
+  "tableId": null,
+}
+`;
+
+exports[`processNextPhase should not process to next phase preflop, call -> call 1`] = `
+Object {
+  "_id": "000000010000000000000000",
+  "betMap": Object {
+    "000000000000000000000001": 0.5,
+    "000000000000000000000002": 0.25,
+    "000000000000000000000004": 0.5,
+    "000000000000000000000006": 0.5,
+  },
+  "currentBets": Array [
+    0.5,
+  ],
+  "dealerPosition": 1,
+  "isDone": false,
+  "isStarted": true,
+  "phases": Array [
+    Object {
+      "cards": Array [],
+      "moves": Array [
+        Object {
+          "amount": 0.5,
+          "moveType": "call",
+          "userId": "000000000000000000000006",
+        },
+        Object {
+          "amount": 0.5,
+          "moveType": "call",
+          "userId": "000000000000000000000001",
+        },
+      ],
+      "type": "pre-flop",
+    },
+  ],
+  "players": Array [
+    Object {
+      "money": 50,
+      "seat": 1,
+      "userId": "000000000000000000000001",
+    },
+    Object {
+      "money": 50,
+      "seat": 2,
+      "userId": "000000000000000000000002",
+    },
+    Object {
+      "money": 50,
+      "seat": 4,
+      "userId": "000000000000000000000004",
+    },
+    Object {
+      "money": 50,
+      "seat": 6,
+      "userId": "000000000000000000000006",
+    },
+  ],
+  "pot": 0,
+  "stakes": 50,
+  "tableId": null,
+}
+`;
+
 exports[`processNextPhase should not process to next phase preflop, fold -> fold -> call -> raise -> raise 1`] = `
 Object {
   "_id": "000000010000000000000000",

@@ -62,6 +62,18 @@ describe('processNextPhase', () => {
     });
   });
   describe('should not process to next phase', () => {
+    it('preflop, call -> call', async () => {
+      const game = getPreflopGame();
+      chainMove(game).call().call();
+      await processNextPhase(game);
+      expect(removePlayerHand(game)).toMatchSnapshot();
+    });
+    it('preflop, call -> call -> call', async () => {
+      const game = getPreflopGame();
+      chainMove(game).call().call().call();
+      await processNextPhase(game);
+      expect(removePlayerHand(game)).toMatchSnapshot();
+    });
     it('preflop, fold -> fold -> call -> raise -> raise', async () => {
       const game = getPreflopGame();
       chainMove(game).fold().fold().call().raise(5).raise(10);

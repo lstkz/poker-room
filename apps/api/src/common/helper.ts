@@ -1,4 +1,5 @@
 import crypto from 'mz/crypto';
+import { GameModel, GamePlayerInfo } from '../collections/Game';
 import { randomInt } from './random';
 
 export function renameId<T extends { _id: any }>(
@@ -48,4 +49,21 @@ export function safeKeys<T>(obj: T): Array<keyof T> {
 export async function randomItem<T>(items: T[]) {
   const idx = (await randomInt()) % items.length;
   return items[idx];
+}
+
+export function getBlindPlayer(
+  players: GamePlayerInfo[],
+  dealerPosition: number
+) {
+  const dealerPlayer = players.findIndex(x => x.seat === dealerPosition);
+  const sbPlayer = players[(dealerPlayer + 1) % players.length];
+  const bbPlayer = players[(dealerPlayer + 2) % players.length];
+  return {
+    sbPlayer,
+    bbPlayer,
+  };
+}
+
+export function getBlindPlayerFromGame(game: GameModel) {
+  return getBlindPlayer(game.players, game.dealerPosition);
 }

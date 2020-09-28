@@ -97,7 +97,9 @@ it('should start the game for 3 players', async () => {
         0.5,
       ],
       "dealerPosition": 1,
-      "isDone": true,
+      "isDone": false,
+      "isStarted": true,
+      "maxSeats": 6,
       "phases": Array [
         Object {
           "cards": Array [],
@@ -132,7 +134,7 @@ it('should start the game for 3 players', async () => {
               "color": "c",
             },
           ],
-          "money": 49.75,
+          "money": 50,
           "seat": 2,
           "userId": "000000000000000000000002",
         },
@@ -147,7 +149,7 @@ it('should start the game for 3 players', async () => {
               "color": "d",
             },
           ],
-          "money": 49.5,
+          "money": 50,
           "seat": 3,
           "userId": "000000000000000000000003",
         },

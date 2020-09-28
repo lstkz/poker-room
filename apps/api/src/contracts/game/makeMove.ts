@@ -12,6 +12,7 @@ import { startSession } from '../../db';
 import { dispatch } from '../../events/dispatch';
 import { createContract, createRpcBinding } from '../../lib';
 import { AppUser } from '../../types';
+import { safeKeys } from '../../common/helper';
 
 export const makeMove = createContract('game.makeMove')
   .params('user', 'values')
@@ -29,13 +30,10 @@ export const makeMove = createContract('game.makeMove')
     try {
       session = await startSession();
       await session.withTransaction(async () => {
-        const game = await GameCollection.findOne({
+        const game = await GameCollection.findOneOrThrow({
           _id: ObjectID.createFromHexString(values.gameId),
         });
-        if (!game) {
-          throw new BadRequestError('Game not found');
-        }
-        if (!game.isDone) {
+        if (game.isDone) {
           throw new BadRequestError('Game is finished');
         }
         const actPlayer = getActPlayer(game);
@@ -50,6 +48,7 @@ export const makeMove = createContract('game.makeMove')
           game
         );
         await processNextPhase(game);
+        await GameCollection.update(game, safeKeys(game));
         dispatch({
           type: 'GAME_UPDATED',
           payload: { gameId: game._id.toHexString() },

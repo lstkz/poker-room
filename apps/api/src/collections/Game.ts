@@ -1,5 +1,5 @@
 import { ObjectID } from 'mongodb';
-import { Card, MoveType } from 'shared';
+import { Card, GamePhaseType, MoveType } from 'shared';
 import { createCollection } from '../db';
 
 interface GameMove {
@@ -7,8 +7,6 @@ interface GameMove {
   moveType: MoveType;
   amount: number;
 }
-
-type GamePhaseType = 'pre-flop' | 'flop' | 'turn' | 'river';
 
 interface GamePhase {
   type: GamePhaseType;

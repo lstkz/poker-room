@@ -2,6 +2,7 @@ import * as R from 'remeda';
 import { Card, MoveType } from 'shared';
 import { GameModel } from '../collections/Game';
 import { InvalidMoveError, UnreachableCaseError } from './errors';
+import { getBlindPlayerFromGame } from './helper';
 import { randomInt } from './random';
 
 export class CardRandomizer {
@@ -243,11 +244,27 @@ export function getCardRandomizer(game: GameModel) {
 
 export async function processNextPhase(game: GameModel) {
   const currentBet = getCurrentBet(game);
-  const playingPlayers = R.pipe(
-    R.last(game.phases)!.moves,
-    R.filter(x => x.moveType !== 'all-in' && x.moveType !== 'fold'),
-    R.map(x => x.userId.toHexString())
+  const skipPlayers = R.pipe(
+    game.phases,
+    R.flatMap(x => x.moves),
+    R.filter(x => x.moveType === 'all-in' || x.moveType === 'fold'),
+    R.map(x => x.userId.toHexString()),
+    x => new Set(x)
   );
+  const playingPlayers = R.pipe(
+    game.players,
+    R.map(x => x.userId.toHexString()),
+    R.filter(x => !skipPlayers.has(x))
+  );
+  if (game.phases.length === 1) {
+    const { bbPlayer } = getBlindPlayerFromGame(game);
+    const bbHasMove =
+      game.phases.length > 1 ||
+      game.phases[0].moves.some(x => x.userId.equals(bbPlayer.userId));
+    if (!bbHasMove) {
+      return;
+    }
+  }
   if (!playingPlayers.every(playerId => game.betMap[playerId] === currentBet)) {
     return;
   }

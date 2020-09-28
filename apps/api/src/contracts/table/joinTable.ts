@@ -1,16 +1,17 @@
 import { ClientSession, ObjectID } from 'mongodb';
 import { S } from 'schema';
 import { Table } from 'shared';
-import {
-  GameCollection,
-  GameModel,
-  GamePlayerInfo,
-} from '../../collections/Game';
+import { GameCollection, GamePlayerInfo } from '../../collections/Game';
 import { TableCollection } from '../../collections/Table';
 import { UserCollection } from '../../collections/User';
 import { CardRandomizer, getBB } from '../../common/engine';
 import { BadRequestError, TableNotFoundError } from '../../common/errors';
-import { randomItem } from '../../common/helper';
+import {
+  getBlindPlayer,
+  randomItem,
+  safeAssign,
+  safeKeys,
+} from '../../common/helper';
 import { MIN_ENTRY_PERCENT } from '../../config';
 import { startSession } from '../../db';
 import { dispatch } from '../../events/dispatch';
@@ -110,7 +111,10 @@ export const joinTableEvent = createEventBinding({
         const table = await TableCollection.findOneOrThrow({
           _id: ObjectID.createFromHexString(payload.tableId),
         });
-        if (table.gameId || table.players.length < 3) {
+        const game = await GameCollection.findOneOrThrow({
+          _id: table.gameId,
+        });
+        if (game.isStarted || table.players.length < 3) {
           return;
         }
         const cr = new CardRandomizer();
@@ -128,36 +132,27 @@ export const joinTableEvent = createEventBinding({
             })
         );
         const bb = getBB(table.stakes);
-        const gameValues: Omit<GameModel, '_id'> = {
-          isDone: true,
-          tableId: table._id,
-          pot: 0,
+        const dealerPosition = (await randomItem(table.players)).seat;
+        const { sbPlayer, bbPlayer } = getBlindPlayer(players, dealerPosition);
+        const updateValue = {
+          isStarted: true,
           stakes: table.stakes,
           currentBets: [bb],
           players,
-          phases: [{ type: 'pre-flop', moves: [], cards: [] }],
-          dealerPosition: (await randomItem(table.players)).seat,
-          betMap: {},
+          phases: [{ type: 'pre-flop' as const, moves: [], cards: [] }],
+          dealerPosition,
+          betMap: {
+            [sbPlayer.userId.toHexString()]: bb / 2,
+            [bbPlayer.userId.toHexString()]: bb,
+          },
         };
-
-        const dealerPlayer = players.findIndex(
-          x => x.seat === gameValues.dealerPosition
-        );
-        const sbPlayer = players[(dealerPlayer + 1) % players.length];
-        const bbPlayer = players[(dealerPlayer + 2) % players.length];
-        sbPlayer.money -= bb / 2;
-        bbPlayer.money -= bb;
-        gameValues.betMap[sbPlayer.userId.toHexString()] = bb / 2;
-        gameValues.betMap[bbPlayer.userId.toHexString()] = bb;
-
-        const gameInsert = await GameCollection.insertOne(gameValues);
-        table.gameId = gameInsert.insertedId;
-        await TableCollection.update(table, ['gameId']);
+        safeAssign(game, updateValue);
+        await GameCollection.update(game, safeKeys(updateValue));
         dispatch({
           type: 'GAME_STARTED',
           payload: {
             tableId: payload.tableId,
-            gameId: gameInsert.insertedId.toHexString(),
+            gameId: game._id.toHexString(),
           },
         });
       });
