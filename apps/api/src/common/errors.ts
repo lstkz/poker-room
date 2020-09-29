@@ -41,3 +41,9 @@ export class TableNotFoundError extends BadRequestError {
     super('Table not found');
   }
 }
+
+export class InvalidMoveError extends BadRequestError {
+  constructor(msg: string) {
+    super('Invalid poker move: ' + msg);
+  }
+}

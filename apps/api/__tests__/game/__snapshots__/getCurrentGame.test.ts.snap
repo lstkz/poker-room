@@ -1,0 +1,87 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should return a game with 3 players (new games) 1`] = `
+Object {
+  "betMap": Object {
+    "000000000000000000000002": 0.25,
+    "000000000000000000000003": 0.5,
+  },
+  "currentBets": Array [
+    0.5,
+  ],
+  "dealerPosition": 1,
+  "id": "200000000000000000000001",
+  "isDone": false,
+  "isStarted": true,
+  "phases": Array [
+    Object {
+      "cards": Array [],
+      "moves": Array [],
+      "type": "pre-flop",
+    },
+  ],
+  "players": Array [
+    Object {
+      "hand": Array [
+        Object {
+          "card": 2,
+          "color": "c",
+        },
+        Object {
+          "card": 2,
+          "color": "s",
+        },
+      ],
+      "money": 50,
+      "seat": 1,
+      "user": Object {
+        "id": "000000000000000000000001",
+        "username": "user1",
+      },
+    },
+    Object {
+      "hand": null,
+      "money": 50,
+      "seat": 2,
+      "user": Object {
+        "id": "000000000000000000000002",
+        "username": "user2",
+      },
+    },
+    Object {
+      "hand": null,
+      "money": 50,
+      "seat": 3,
+      "user": Object {
+        "id": "000000000000000000000003",
+        "username": "user3",
+      },
+    },
+  ],
+  "pot": 0,
+  "stakes": 50,
+  "tableId": "100000000000000000000001",
+}
+`;
+
+exports[`should return a game with no players 1`] = `
+Object {
+  "betMap": Object {},
+  "currentBets": Array [],
+  "dealerPosition": -1,
+  "id": "200000000000000000000001",
+  "isDone": false,
+  "isStarted": false,
+  "phases": Array [
+    Object {
+      "cards": Array [],
+      "moves": Array [],
+      "type": "pre-flop",
+    },
+  ],
+  "players": Array [],
+  "pot": 0,
+  "stakes": 0,
+  "tableId": "100000000000000000000001",
+}
+`;

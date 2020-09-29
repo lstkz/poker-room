@@ -1,0 +1,214 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CardRandomizer should return all cards 1`] = `
+Array [
+  Object {
+    "card": 2,
+    "color": "c",
+  },
+  Object {
+    "card": 2,
+    "color": "d",
+  },
+  Object {
+    "card": 2,
+    "color": "h",
+  },
+  Object {
+    "card": 2,
+    "color": "s",
+  },
+  Object {
+    "card": 3,
+    "color": "c",
+  },
+  Object {
+    "card": 3,
+    "color": "d",
+  },
+  Object {
+    "card": 3,
+    "color": "h",
+  },
+  Object {
+    "card": 3,
+    "color": "s",
+  },
+  Object {
+    "card": 4,
+    "color": "c",
+  },
+  Object {
+    "card": 4,
+    "color": "d",
+  },
+  Object {
+    "card": 4,
+    "color": "h",
+  },
+  Object {
+    "card": 4,
+    "color": "s",
+  },
+  Object {
+    "card": 5,
+    "color": "c",
+  },
+  Object {
+    "card": 5,
+    "color": "d",
+  },
+  Object {
+    "card": 5,
+    "color": "h",
+  },
+  Object {
+    "card": 5,
+    "color": "s",
+  },
+  Object {
+    "card": 6,
+    "color": "c",
+  },
+  Object {
+    "card": 6,
+    "color": "d",
+  },
+  Object {
+    "card": 6,
+    "color": "h",
+  },
+  Object {
+    "card": 6,
+    "color": "s",
+  },
+  Object {
+    "card": 7,
+    "color": "c",
+  },
+  Object {
+    "card": 7,
+    "color": "d",
+  },
+  Object {
+    "card": 7,
+    "color": "h",
+  },
+  Object {
+    "card": 7,
+    "color": "s",
+  },
+  Object {
+    "card": 8,
+    "color": "c",
+  },
+  Object {
+    "card": 8,
+    "color": "d",
+  },
+  Object {
+    "card": 8,
+    "color": "h",
+  },
+  Object {
+    "card": 8,
+    "color": "s",
+  },
+  Object {
+    "card": 9,
+    "color": "c",
+  },
+  Object {
+    "card": 9,
+    "color": "d",
+  },
+  Object {
+    "card": 9,
+    "color": "h",
+  },
+  Object {
+    "card": 9,
+    "color": "s",
+  },
+  Object {
+    "card": "T",
+    "color": "c",
+  },
+  Object {
+    "card": "T",
+    "color": "d",
+  },
+  Object {
+    "card": "T",
+    "color": "h",
+  },
+  Object {
+    "card": "T",
+    "color": "s",
+  },
+  Object {
+    "card": "J",
+    "color": "c",
+  },
+  Object {
+    "card": "J",
+    "color": "d",
+  },
+  Object {
+    "card": "J",
+    "color": "h",
+  },
+  Object {
+    "card": "J",
+    "color": "s",
+  },
+  Object {
+    "card": "Q",
+    "color": "c",
+  },
+  Object {
+    "card": "Q",
+    "color": "d",
+  },
+  Object {
+    "card": "Q",
+    "color": "h",
+  },
+  Object {
+    "card": "Q",
+    "color": "s",
+  },
+  Object {
+    "card": "K",
+    "color": "c",
+  },
+  Object {
+    "card": "K",
+    "color": "d",
+  },
+  Object {
+    "card": "K",
+    "color": "h",
+  },
+  Object {
+    "card": "K",
+    "color": "s",
+  },
+  Object {
+    "card": "A",
+    "color": "c",
+  },
+  Object {
+    "card": "A",
+    "color": "d",
+  },
+  Object {
+    "card": "A",
+    "color": "h",
+  },
+  Object {
+    "card": "A",
+    "color": "s",
+  },
+]
+`;

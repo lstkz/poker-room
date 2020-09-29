@@ -9,7 +9,7 @@ export function mapTable(
   userMap: Record<string, UserModel>
 ): Table {
   return {
-    ...renameId(table),
+    ...R.omit(renameId(table), ['gameId']),
     players: table.players
       .map(player => {
         const id = player.userId.toHexString();

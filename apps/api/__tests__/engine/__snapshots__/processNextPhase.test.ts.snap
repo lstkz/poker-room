@@ -1,0 +1,1433 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`processNextPhase should not process to next phase flop, fold -> fold -> raise -> raise -> raise 1`] = `
+Object {
+  "_id": "000000010000000000000000",
+  "betMap": Object {
+    "000000000000000000000001": 5,
+    "000000000000000000000006": 10,
+  },
+  "currentBets": Array [
+    2,
+    5,
+    10,
+  ],
+  "dealerPosition": 1,
+  "isDone": false,
+  "isStarted": true,
+  "phases": Array [
+    Object {
+      "cards": Array [],
+      "moves": Array [
+        Object {
+          "amount": 0.5,
+          "moveType": "call",
+          "userId": "000000000000000000000006",
+        },
+        Object {
+          "amount": 0.5,
+          "moveType": "call",
+          "userId": "000000000000000000000001",
+        },
+        Object {
+          "amount": 0.5,
+          "moveType": "call",
+          "userId": "000000000000000000000002",
+        },
+        Object {
+          "amount": 0,
+          "moveType": "check",
+          "userId": "000000000000000000000004",
+        },
+      ],
+      "type": "pre-flop",
+    },
+    Object {
+      "cards": Array [
+        Object {
+          "card": 2,
+          "color": "s",
+        },
+        Object {
+          "card": 3,
+          "color": "d",
+        },
+        Object {
+          "card": 3,
+          "color": "s",
+        },
+      ],
+      "moves": Array [
+        Object {
+          "amount": 0,
+          "moveType": "fold",
+          "userId": "000000000000000000000002",
+        },
+        Object {
+          "amount": 0,
+          "moveType": "fold",
+          "userId": "000000000000000000000004",
+        },
+        Object {
+          "amount": 2,
+          "moveType": "raise",
+          "userId": "000000000000000000000006",
+        },
+        Object {
+          "amount": 5,
+          "moveType": "raise",
+          "userId": "000000000000000000000001",
+        },
+        Object {
+          "amount": 10,
+          "moveType": "raise",
+          "userId": "000000000000000000000006",
+        },
+      ],
+      "type": "flop",
+    },
+  ],
+  "players": Array [
+    Object {
+      "money": 49.5,
+      "seat": 1,
+      "userId": "000000000000000000000001",
+    },
+    Object {
+      "money": 49.5,
+      "seat": 2,
+      "userId": "000000000000000000000002",
+    },
+    Object {
+      "money": 49.5,
+      "seat": 4,
+      "userId": "000000000000000000000004",
+    },
+    Object {
+      "money": 49.5,
+      "seat": 6,
+      "userId": "000000000000000000000006",
+    },
+  ],
+  "pot": 2,
+  "stakes": 50,
+  "tableId": null,
+}
+`;
+
+exports[`processNextPhase should not process to next phase preflop, call -> call -> call 1`] = `
+Object {
+  "_id": "000000010000000000000000",
+  "betMap": Object {
+    "000000000000000000000001": 0.5,
+    "000000000000000000000002": 0.5,
+    "000000000000000000000004": 0.5,
+    "000000000000000000000006": 0.5,
+  },
+  "currentBets": Array [
+    0.5,
+  ],
+  "dealerPosition": 1,
+  "isDone": false,
+  "isStarted": true,
+  "phases": Array [
+    Object {
+      "cards": Array [],
+      "moves": Array [
+        Object {
+          "amount": 0.5,
+          "moveType": "call",
+          "userId": "000000000000000000000006",
+        },
+        Object {
+          "amount": 0.5,
+          "moveType": "call",
+          "userId": "000000000000000000000001",
+        },
+        Object {
+          "amount": 0.5,
+          "moveType": "call",
+          "userId": "000000000000000000000002",
+        },
+      ],
+      "type": "pre-flop",
+    },
+  ],
+  "players": Array [
+    Object {
+      "money": 50,
+      "seat": 1,
+      "userId": "000000000000000000000001",
+    },
+    Object {
+      "money": 50,
+      "seat": 2,
+      "userId": "000000000000000000000002",
+    },
+    Object {
+      "money": 50,
+      "seat": 4,
+      "userId": "000000000000000000000004",
+    },
+    Object {
+      "money": 50,
+      "seat": 6,
+      "userId": "000000000000000000000006",
+    },
+  ],
+  "pot": 0,
+  "stakes": 50,
+  "tableId": null,
+}
+`;
+
+exports[`processNextPhase should not process to next phase preflop, call -> call 1`] = `
+Object {
+  "_id": "000000010000000000000000",
+  "betMap": Object {
+    "000000000000000000000001": 0.5,
+    "000000000000000000000002": 0.25,
+    "000000000000000000000004": 0.5,
+    "000000000000000000000006": 0.5,
+  },
+  "currentBets": Array [
+    0.5,
+  ],
+  "dealerPosition": 1,
+  "isDone": false,
+  "isStarted": true,
+  "phases": Array [
+    Object {
+      "cards": Array [],
+      "moves": Array [
+        Object {
+          "amount": 0.5,
+          "moveType": "call",
+          "userId": "000000000000000000000006",
+        },
+        Object {
+          "amount": 0.5,
+          "moveType": "call",
+          "userId": "000000000000000000000001",
+        },
+      ],
+      "type": "pre-flop",
+    },
+  ],
+  "players": Array [
+    Object {
+      "money": 50,
+      "seat": 1,
+      "userId": "000000000000000000000001",
+    },
+    Object {
+      "money": 50,
+      "seat": 2,
+      "userId": "000000000000000000000002",
+    },
+    Object {
+      "money": 50,
+      "seat": 4,
+      "userId": "000000000000000000000004",
+    },
+    Object {
+      "money": 50,
+      "seat": 6,
+      "userId": "000000000000000000000006",
+    },
+  ],
+  "pot": 0,
+  "stakes": 50,
+  "tableId": null,
+}
+`;
+
+exports[`processNextPhase should not process to next phase preflop, fold -> fold -> call -> raise -> raise 1`] = `
+Object {
+  "_id": "000000010000000000000000",
+  "betMap": Object {
+    "000000000000000000000002": 10,
+    "000000000000000000000004": 5,
+  },
+  "currentBets": Array [
+    0.5,
+    5,
+    10,
+  ],
+  "dealerPosition": 1,
+  "isDone": false,
+  "isStarted": true,
+  "phases": Array [
+    Object {
+      "cards": Array [],
+      "moves": Array [
+        Object {
+          "amount": 0,
+          "moveType": "fold",
+          "userId": "000000000000000000000006",
+        },
+        Object {
+          "amount": 0,
+          "moveType": "fold",
+          "userId": "000000000000000000000001",
+        },
+        Object {
+          "amount": 0.5,
+          "moveType": "call",
+          "userId": "000000000000000000000002",
+        },
+        Object {
+          "amount": 5,
+          "moveType": "raise",
+          "userId": "000000000000000000000004",
+        },
+        Object {
+          "amount": 10,
+          "moveType": "raise",
+          "userId": "000000000000000000000002",
+        },
+      ],
+      "type": "pre-flop",
+    },
+  ],
+  "players": Array [
+    Object {
+      "money": 50,
+      "seat": 1,
+      "userId": "000000000000000000000001",
+    },
+    Object {
+      "money": 50,
+      "seat": 2,
+      "userId": "000000000000000000000002",
+    },
+    Object {
+      "money": 50,
+      "seat": 4,
+      "userId": "000000000000000000000004",
+    },
+    Object {
+      "money": 50,
+      "seat": 6,
+      "userId": "000000000000000000000006",
+    },
+  ],
+  "pot": 0,
+  "stakes": 50,
+  "tableId": null,
+}
+`;
+
+exports[`processNextPhase should not process to next phase river, fold -> fold -> raise -> raise -> raise 1`] = `
+Object {
+  "_id": "000000010000000000000000",
+  "betMap": Object {
+    "000000000000000000000001": 5,
+    "000000000000000000000006": 10,
+  },
+  "currentBets": Array [
+    2,
+    5,
+    10,
+  ],
+  "dealerPosition": 1,
+  "isDone": false,
+  "isStarted": true,
+  "phases": Array [
+    Object {
+      "cards": Array [],
+      "moves": Array [
+        Object {
+          "amount": 0.5,
+          "moveType": "call",
+          "userId": "000000000000000000000006",
+        },
+        Object {
+          "amount": 0.5,
+          "moveType": "call",
+          "userId": "000000000000000000000001",
+        },
+        Object {
+          "amount": 0.5,
+          "moveType": "call",
+          "userId": "000000000000000000000002",
+        },
+        Object {
+          "amount": 0,
+          "moveType": "check",
+          "userId": "000000000000000000000004",
+        },
+      ],
+      "type": "pre-flop",
+    },
+    Object {
+      "cards": Array [
+        Object {
+          "card": 2,
+          "color": "s",
+        },
+        Object {
+          "card": 3,
+          "color": "d",
+        },
+        Object {
+          "card": 3,
+          "color": "s",
+        },
+      ],
+      "moves": Array [
+        Object {
+          "amount": 0.5,
+          "moveType": "raise",
+          "userId": "000000000000000000000002",
+        },
+        Object {
+          "amount": 0.5,
+          "moveType": "call",
+          "userId": "000000000000000000000004",
+        },
+        Object {
+          "amount": 0.5,
+          "moveType": "call",
+          "userId": "000000000000000000000006",
+        },
+        Object {
+          "amount": 0.5,
+          "moveType": "call",
+          "userId": "000000000000000000000001",
+        },
+      ],
+      "type": "flop",
+    },
+    Object {
+      "cards": Array [
+        Object {
+          "card": 4,
+          "color": "d",
+        },
+      ],
+      "moves": Array [
+        Object {
+          "amount": 0.5,
+          "moveType": "raise",
+          "userId": "000000000000000000000002",
+        },
+        Object {
+          "amount": 0.5,
+          "moveType": "call",
+          "userId": "000000000000000000000004",
+        },
+        Object {
+          "amount": 0.5,
+          "moveType": "call",
+          "userId": "000000000000000000000006",
+        },
+        Object {
+          "amount": 0.5,
+          "moveType": "call",
+          "userId": "000000000000000000000001",
+        },
+      ],
+      "type": "turn",
+    },
+    Object {
+      "cards": Array [
+        Object {
+          "card": 4,
+          "color": "s",
+        },
+      ],
+      "moves": Array [
+        Object {
+          "amount": 0,
+          "moveType": "fold",
+          "userId": "000000000000000000000002",
+        },
+        Object {
+          "amount": 0,
+          "moveType": "fold",
+          "userId": "000000000000000000000004",
+        },
+        Object {
+          "amount": 2,
+          "moveType": "raise",
+          "userId": "000000000000000000000006",
+        },
+        Object {
+          "amount": 5,
+          "moveType": "raise",
+          "userId": "000000000000000000000001",
+        },
+        Object {
+          "amount": 10,
+          "moveType": "raise",
+          "userId": "000000000000000000000006",
+        },
+      ],
+      "type": "river",
+    },
+  ],
+  "players": Array [
+    Object {
+      "money": 48.5,
+      "seat": 1,
+      "userId": "000000000000000000000001",
+    },
+    Object {
+      "money": 48.5,
+      "seat": 2,
+      "userId": "000000000000000000000002",
+    },
+    Object {
+      "money": 48.5,
+      "seat": 4,
+      "userId": "000000000000000000000004",
+    },
+    Object {
+      "money": 48.5,
+      "seat": 6,
+      "userId": "000000000000000000000006",
+    },
+  ],
+  "pot": 6,
+  "stakes": 50,
+  "tableId": null,
+}
+`;
+
+exports[`processNextPhase should not process to next phase turn, fold -> fold -> raise -> raise -> raise 1`] = `
+Object {
+  "_id": "000000010000000000000000",
+  "betMap": Object {
+    "000000000000000000000001": 5,
+    "000000000000000000000006": 10,
+  },
+  "currentBets": Array [
+    2,
+    5,
+    10,
+  ],
+  "dealerPosition": 1,
+  "isDone": false,
+  "isStarted": true,
+  "phases": Array [
+    Object {
+      "cards": Array [],
+      "moves": Array [
+        Object {
+          "amount": 0.5,
+          "moveType": "call",
+          "userId": "000000000000000000000006",
+        },
+        Object {
+          "amount": 0.5,
+          "moveType": "call",
+          "userId": "000000000000000000000001",
+        },
+        Object {
+          "amount": 0.5,
+          "moveType": "call",
+          "userId": "000000000000000000000002",
+        },
+        Object {
+          "amount": 0,
+          "moveType": "check",
+          "userId": "000000000000000000000004",
+        },
+      ],
+      "type": "pre-flop",
+    },
+    Object {
+      "cards": Array [
+        Object {
+          "card": 2,
+          "color": "s",
+        },
+        Object {
+          "card": 3,
+          "color": "d",
+        },
+        Object {
+          "card": 3,
+          "color": "s",
+        },
+      ],
+      "moves": Array [
+        Object {
+          "amount": 0.5,
+          "moveType": "raise",
+          "userId": "000000000000000000000002",
+        },
+        Object {
+          "amount": 0.5,
+          "moveType": "call",
+          "userId": "000000000000000000000004",
+        },
+        Object {
+          "amount": 0.5,
+          "moveType": "call",
+          "userId": "000000000000000000000006",
+        },
+        Object {
+          "amount": 0.5,
+          "moveType": "call",
+          "userId": "000000000000000000000001",
+        },
+      ],
+      "type": "flop",
+    },
+    Object {
+      "cards": Array [
+        Object {
+          "card": 4,
+          "color": "d",
+        },
+      ],
+      "moves": Array [
+        Object {
+          "amount": 0,
+          "moveType": "fold",
+          "userId": "000000000000000000000002",
+        },
+        Object {
+          "amount": 0,
+          "moveType": "fold",
+          "userId": "000000000000000000000004",
+        },
+        Object {
+          "amount": 2,
+          "moveType": "raise",
+          "userId": "000000000000000000000006",
+        },
+        Object {
+          "amount": 5,
+          "moveType": "raise",
+          "userId": "000000000000000000000001",
+        },
+        Object {
+          "amount": 10,
+          "moveType": "raise",
+          "userId": "000000000000000000000006",
+        },
+      ],
+      "type": "turn",
+    },
+  ],
+  "players": Array [
+    Object {
+      "money": 49,
+      "seat": 1,
+      "userId": "000000000000000000000001",
+    },
+    Object {
+      "money": 49,
+      "seat": 2,
+      "userId": "000000000000000000000002",
+    },
+    Object {
+      "money": 49,
+      "seat": 4,
+      "userId": "000000000000000000000004",
+    },
+    Object {
+      "money": 49,
+      "seat": 6,
+      "userId": "000000000000000000000006",
+    },
+  ],
+  "pot": 4,
+  "stakes": 50,
+  "tableId": null,
+}
+`;
+
+exports[`processNextPhase should process to next phase flop, fold -> fold -> raise -> call 1`] = `
+Object {
+  "_id": "000000010000000000000000",
+  "betMap": Object {},
+  "currentBets": Array [],
+  "dealerPosition": 1,
+  "isDone": false,
+  "isStarted": true,
+  "phases": Array [
+    Object {
+      "cards": Array [],
+      "moves": Array [
+        Object {
+          "amount": 0.5,
+          "moveType": "call",
+          "userId": "000000000000000000000006",
+        },
+        Object {
+          "amount": 0.5,
+          "moveType": "call",
+          "userId": "000000000000000000000001",
+        },
+        Object {
+          "amount": 0.5,
+          "moveType": "call",
+          "userId": "000000000000000000000002",
+        },
+        Object {
+          "amount": 0,
+          "moveType": "check",
+          "userId": "000000000000000000000004",
+        },
+      ],
+      "type": "pre-flop",
+    },
+    Object {
+      "cards": Array [
+        Object {
+          "card": 2,
+          "color": "s",
+        },
+        Object {
+          "card": 3,
+          "color": "d",
+        },
+        Object {
+          "card": 3,
+          "color": "s",
+        },
+      ],
+      "moves": Array [
+        Object {
+          "amount": 0,
+          "moveType": "fold",
+          "userId": "000000000000000000000002",
+        },
+        Object {
+          "amount": 0,
+          "moveType": "fold",
+          "userId": "000000000000000000000004",
+        },
+        Object {
+          "amount": 3,
+          "moveType": "raise",
+          "userId": "000000000000000000000006",
+        },
+        Object {
+          "amount": 3,
+          "moveType": "call",
+          "userId": "000000000000000000000001",
+        },
+      ],
+      "type": "flop",
+    },
+    Object {
+      "cards": Array [
+        Object {
+          "card": 4,
+          "color": "d",
+        },
+      ],
+      "moves": Array [],
+      "type": "turn",
+    },
+  ],
+  "players": Array [
+    Object {
+      "money": 46.5,
+      "seat": 1,
+      "userId": "000000000000000000000001",
+    },
+    Object {
+      "money": 49.5,
+      "seat": 2,
+      "userId": "000000000000000000000002",
+    },
+    Object {
+      "money": 49.5,
+      "seat": 4,
+      "userId": "000000000000000000000004",
+    },
+    Object {
+      "money": 46.5,
+      "seat": 6,
+      "userId": "000000000000000000000006",
+    },
+  ],
+  "pot": 8,
+  "stakes": 50,
+  "tableId": null,
+}
+`;
+
+exports[`processNextPhase should process to next phase flop, fold -> fold -> raise -> raise -> call 1`] = `
+Object {
+  "_id": "000000010000000000000000",
+  "betMap": Object {},
+  "currentBets": Array [],
+  "dealerPosition": 1,
+  "isDone": false,
+  "isStarted": true,
+  "phases": Array [
+    Object {
+      "cards": Array [],
+      "moves": Array [
+        Object {
+          "amount": 0.5,
+          "moveType": "call",
+          "userId": "000000000000000000000006",
+        },
+        Object {
+          "amount": 0.5,
+          "moveType": "call",
+          "userId": "000000000000000000000001",
+        },
+        Object {
+          "amount": 0.5,
+          "moveType": "call",
+          "userId": "000000000000000000000002",
+        },
+        Object {
+          "amount": 0,
+          "moveType": "check",
+          "userId": "000000000000000000000004",
+        },
+      ],
+      "type": "pre-flop",
+    },
+    Object {
+      "cards": Array [
+        Object {
+          "card": 2,
+          "color": "s",
+        },
+        Object {
+          "card": 3,
+          "color": "d",
+        },
+        Object {
+          "card": 3,
+          "color": "s",
+        },
+      ],
+      "moves": Array [
+        Object {
+          "amount": 0,
+          "moveType": "fold",
+          "userId": "000000000000000000000002",
+        },
+        Object {
+          "amount": 0,
+          "moveType": "fold",
+          "userId": "000000000000000000000004",
+        },
+        Object {
+          "amount": 3,
+          "moveType": "raise",
+          "userId": "000000000000000000000006",
+        },
+        Object {
+          "amount": 6,
+          "moveType": "raise",
+          "userId": "000000000000000000000001",
+        },
+        Object {
+          "amount": 6,
+          "moveType": "call",
+          "userId": "000000000000000000000006",
+        },
+      ],
+      "type": "flop",
+    },
+    Object {
+      "cards": Array [
+        Object {
+          "card": 4,
+          "color": "d",
+        },
+      ],
+      "moves": Array [],
+      "type": "turn",
+    },
+  ],
+  "players": Array [
+    Object {
+      "money": 43.5,
+      "seat": 1,
+      "userId": "000000000000000000000001",
+    },
+    Object {
+      "money": 49.5,
+      "seat": 2,
+      "userId": "000000000000000000000002",
+    },
+    Object {
+      "money": 49.5,
+      "seat": 4,
+      "userId": "000000000000000000000004",
+    },
+    Object {
+      "money": 43.5,
+      "seat": 6,
+      "userId": "000000000000000000000006",
+    },
+  ],
+  "pot": 14,
+  "stakes": 50,
+  "tableId": null,
+}
+`;
+
+exports[`processNextPhase should process to next phase preflop, call -> call -> call -> check 1`] = `
+Object {
+  "_id": "000000010000000000000000",
+  "betMap": Object {},
+  "currentBets": Array [],
+  "dealerPosition": 1,
+  "isDone": false,
+  "isStarted": true,
+  "phases": Array [
+    Object {
+      "cards": Array [],
+      "moves": Array [
+        Object {
+          "amount": 0.5,
+          "moveType": "call",
+          "userId": "000000000000000000000006",
+        },
+        Object {
+          "amount": 0.5,
+          "moveType": "call",
+          "userId": "000000000000000000000001",
+        },
+        Object {
+          "amount": 0.5,
+          "moveType": "call",
+          "userId": "000000000000000000000002",
+        },
+        Object {
+          "amount": 0,
+          "moveType": "check",
+          "userId": "000000000000000000000004",
+        },
+      ],
+      "type": "pre-flop",
+    },
+    Object {
+      "cards": Array [
+        Object {
+          "card": 2,
+          "color": "s",
+        },
+        Object {
+          "card": 3,
+          "color": "d",
+        },
+        Object {
+          "card": 3,
+          "color": "s",
+        },
+      ],
+      "moves": Array [],
+      "type": "flop",
+    },
+  ],
+  "players": Array [
+    Object {
+      "money": 49.5,
+      "seat": 1,
+      "userId": "000000000000000000000001",
+    },
+    Object {
+      "money": 49.5,
+      "seat": 2,
+      "userId": "000000000000000000000002",
+    },
+    Object {
+      "money": 49.5,
+      "seat": 4,
+      "userId": "000000000000000000000004",
+    },
+    Object {
+      "money": 49.5,
+      "seat": 6,
+      "userId": "000000000000000000000006",
+    },
+  ],
+  "pot": 2,
+  "stakes": 50,
+  "tableId": null,
+}
+`;
+
+exports[`processNextPhase should process to next phase preflop, fold -> fold -> call -> check 1`] = `
+Object {
+  "_id": "000000010000000000000000",
+  "betMap": Object {},
+  "currentBets": Array [],
+  "dealerPosition": 1,
+  "isDone": false,
+  "isStarted": true,
+  "phases": Array [
+    Object {
+      "cards": Array [],
+      "moves": Array [
+        Object {
+          "amount": 0,
+          "moveType": "fold",
+          "userId": "000000000000000000000006",
+        },
+        Object {
+          "amount": 0,
+          "moveType": "fold",
+          "userId": "000000000000000000000001",
+        },
+        Object {
+          "amount": 0.5,
+          "moveType": "call",
+          "userId": "000000000000000000000002",
+        },
+        Object {
+          "amount": 0,
+          "moveType": "check",
+          "userId": "000000000000000000000004",
+        },
+      ],
+      "type": "pre-flop",
+    },
+    Object {
+      "cards": Array [
+        Object {
+          "card": 2,
+          "color": "s",
+        },
+        Object {
+          "card": 3,
+          "color": "d",
+        },
+        Object {
+          "card": 3,
+          "color": "s",
+        },
+      ],
+      "moves": Array [],
+      "type": "flop",
+    },
+  ],
+  "players": Array [
+    Object {
+      "money": 50,
+      "seat": 1,
+      "userId": "000000000000000000000001",
+    },
+    Object {
+      "money": 49.5,
+      "seat": 2,
+      "userId": "000000000000000000000002",
+    },
+    Object {
+      "money": 49.5,
+      "seat": 4,
+      "userId": "000000000000000000000004",
+    },
+    Object {
+      "money": 50,
+      "seat": 6,
+      "userId": "000000000000000000000006",
+    },
+  ],
+  "pot": 1,
+  "stakes": 50,
+  "tableId": null,
+}
+`;
+
+exports[`processNextPhase should process to next phase preflop, fold -> fold -> call -> raise -> call 1`] = `
+Object {
+  "_id": "000000010000000000000000",
+  "betMap": Object {},
+  "currentBets": Array [],
+  "dealerPosition": 1,
+  "isDone": false,
+  "isStarted": true,
+  "phases": Array [
+    Object {
+      "cards": Array [],
+      "moves": Array [
+        Object {
+          "amount": 0,
+          "moveType": "fold",
+          "userId": "000000000000000000000006",
+        },
+        Object {
+          "amount": 0,
+          "moveType": "fold",
+          "userId": "000000000000000000000001",
+        },
+        Object {
+          "amount": 0.5,
+          "moveType": "call",
+          "userId": "000000000000000000000002",
+        },
+        Object {
+          "amount": 5,
+          "moveType": "raise",
+          "userId": "000000000000000000000004",
+        },
+        Object {
+          "amount": 5,
+          "moveType": "call",
+          "userId": "000000000000000000000002",
+        },
+      ],
+      "type": "pre-flop",
+    },
+    Object {
+      "cards": Array [
+        Object {
+          "card": 2,
+          "color": "s",
+        },
+        Object {
+          "card": 3,
+          "color": "d",
+        },
+        Object {
+          "card": 3,
+          "color": "s",
+        },
+      ],
+      "moves": Array [],
+      "type": "flop",
+    },
+  ],
+  "players": Array [
+    Object {
+      "money": 50,
+      "seat": 1,
+      "userId": "000000000000000000000001",
+    },
+    Object {
+      "money": 45,
+      "seat": 2,
+      "userId": "000000000000000000000002",
+    },
+    Object {
+      "money": 45,
+      "seat": 4,
+      "userId": "000000000000000000000004",
+    },
+    Object {
+      "money": 50,
+      "seat": 6,
+      "userId": "000000000000000000000006",
+    },
+  ],
+  "pot": 10,
+  "stakes": 50,
+  "tableId": null,
+}
+`;
+
+exports[`processNextPhase should process to next phase river, fold -> fold -> raise -> call 1`] = `
+Object {
+  "_id": "000000010000000000000000",
+  "betMap": Object {},
+  "currentBets": Array [],
+  "dealerPosition": 1,
+  "isDone": true,
+  "isStarted": true,
+  "phases": Array [
+    Object {
+      "cards": Array [],
+      "moves": Array [
+        Object {
+          "amount": 0.5,
+          "moveType": "call",
+          "userId": "000000000000000000000006",
+        },
+        Object {
+          "amount": 0.5,
+          "moveType": "call",
+          "userId": "000000000000000000000001",
+        },
+        Object {
+          "amount": 0.5,
+          "moveType": "call",
+          "userId": "000000000000000000000002",
+        },
+        Object {
+          "amount": 0,
+          "moveType": "check",
+          "userId": "000000000000000000000004",
+        },
+      ],
+      "type": "pre-flop",
+    },
+    Object {
+      "cards": Array [
+        Object {
+          "card": 2,
+          "color": "s",
+        },
+        Object {
+          "card": 3,
+          "color": "d",
+        },
+        Object {
+          "card": 3,
+          "color": "s",
+        },
+      ],
+      "moves": Array [
+        Object {
+          "amount": 0.5,
+          "moveType": "raise",
+          "userId": "000000000000000000000002",
+        },
+        Object {
+          "amount": 0.5,
+          "moveType": "call",
+          "userId": "000000000000000000000004",
+        },
+        Object {
+          "amount": 0.5,
+          "moveType": "call",
+          "userId": "000000000000000000000006",
+        },
+        Object {
+          "amount": 0.5,
+          "moveType": "call",
+          "userId": "000000000000000000000001",
+        },
+      ],
+      "type": "flop",
+    },
+    Object {
+      "cards": Array [
+        Object {
+          "card": 4,
+          "color": "d",
+        },
+      ],
+      "moves": Array [
+        Object {
+          "amount": 0.5,
+          "moveType": "raise",
+          "userId": "000000000000000000000002",
+        },
+        Object {
+          "amount": 0.5,
+          "moveType": "call",
+          "userId": "000000000000000000000004",
+        },
+        Object {
+          "amount": 0.5,
+          "moveType": "call",
+          "userId": "000000000000000000000006",
+        },
+        Object {
+          "amount": 0.5,
+          "moveType": "call",
+          "userId": "000000000000000000000001",
+        },
+      ],
+      "type": "turn",
+    },
+    Object {
+      "cards": Array [
+        Object {
+          "card": 4,
+          "color": "s",
+        },
+      ],
+      "moves": Array [
+        Object {
+          "amount": 0,
+          "moveType": "fold",
+          "userId": "000000000000000000000002",
+        },
+        Object {
+          "amount": 0,
+          "moveType": "fold",
+          "userId": "000000000000000000000004",
+        },
+        Object {
+          "amount": 3,
+          "moveType": "raise",
+          "userId": "000000000000000000000006",
+        },
+        Object {
+          "amount": 3,
+          "moveType": "call",
+          "userId": "000000000000000000000001",
+        },
+      ],
+      "type": "river",
+    },
+  ],
+  "players": Array [
+    Object {
+      "money": 45.5,
+      "seat": 1,
+      "userId": "000000000000000000000001",
+    },
+    Object {
+      "money": 48.5,
+      "seat": 2,
+      "userId": "000000000000000000000002",
+    },
+    Object {
+      "money": 48.5,
+      "seat": 4,
+      "userId": "000000000000000000000004",
+    },
+    Object {
+      "money": 45.5,
+      "seat": 6,
+      "userId": "000000000000000000000006",
+    },
+  ],
+  "pot": 12,
+  "stakes": 50,
+  "tableId": null,
+}
+`;
+
+exports[`processNextPhase should process to next phase turn, fold -> fold -> raise -> call 1`] = `
+Object {
+  "_id": "000000010000000000000000",
+  "betMap": Object {},
+  "currentBets": Array [],
+  "dealerPosition": 1,
+  "isDone": false,
+  "isStarted": true,
+  "phases": Array [
+    Object {
+      "cards": Array [],
+      "moves": Array [
+        Object {
+          "amount": 0.5,
+          "moveType": "call",
+          "userId": "000000000000000000000006",
+        },
+        Object {
+          "amount": 0.5,
+          "moveType": "call",
+          "userId": "000000000000000000000001",
+        },
+        Object {
+          "amount": 0.5,
+          "moveType": "call",
+          "userId": "000000000000000000000002",
+        },
+        Object {
+          "amount": 0,
+          "moveType": "check",
+          "userId": "000000000000000000000004",
+        },
+      ],
+      "type": "pre-flop",
+    },
+    Object {
+      "cards": Array [
+        Object {
+          "card": 2,
+          "color": "s",
+        },
+        Object {
+          "card": 3,
+          "color": "d",
+        },
+        Object {
+          "card": 3,
+          "color": "s",
+        },
+      ],
+      "moves": Array [
+        Object {
+          "amount": 0.5,
+          "moveType": "raise",
+          "userId": "000000000000000000000002",
+        },
+        Object {
+          "amount": 0.5,
+          "moveType": "call",
+          "userId": "000000000000000000000004",
+        },
+        Object {
+          "amount": 0.5,
+          "moveType": "call",
+          "userId": "000000000000000000000006",
+        },
+        Object {
+          "amount": 0.5,
+          "moveType": "call",
+          "userId": "000000000000000000000001",
+        },
+      ],
+      "type": "flop",
+    },
+    Object {
+      "cards": Array [
+        Object {
+          "card": 4,
+          "color": "d",
+        },
+      ],
+      "moves": Array [
+        Object {
+          "amount": 0,
+          "moveType": "fold",
+          "userId": "000000000000000000000002",
+        },
+        Object {
+          "amount": 0,
+          "moveType": "fold",
+          "userId": "000000000000000000000004",
+        },
+        Object {
+          "amount": 3,
+          "moveType": "raise",
+          "userId": "000000000000000000000006",
+        },
+        Object {
+          "amount": 3,
+          "moveType": "call",
+          "userId": "000000000000000000000001",
+        },
+      ],
+      "type": "turn",
+    },
+    Object {
+      "cards": Array [
+        Object {
+          "card": 4,
+          "color": "s",
+        },
+      ],
+      "moves": Array [],
+      "type": "river",
+    },
+  ],
+  "players": Array [
+    Object {
+      "money": 46,
+      "seat": 1,
+      "userId": "000000000000000000000001",
+    },
+    Object {
+      "money": 49,
+      "seat": 2,
+      "userId": "000000000000000000000002",
+    },
+    Object {
+      "money": 49,
+      "seat": 4,
+      "userId": "000000000000000000000004",
+    },
+    Object {
+      "money": 46,
+      "seat": 6,
+      "userId": "000000000000000000000006",
+    },
+  ],
+  "pot": 10,
+  "stakes": 50,
+  "tableId": null,
+}
+`;

@@ -111,7 +111,11 @@ interface DbCollection<TSchema> {
     filter: FilterQuery<TSchema>,
     options?: CommonOptions
   ): Promise<DeleteWriteOpResultObject>;
-  update(model: TSchema, fields: Array<keyof TSchema>): Promise<void>;
+  update(
+    model: TSchema,
+    fields: Array<keyof TSchema>,
+    options?: CommonOptions
+  ): Promise<void>;
 }
 
 export function createCollection<T>(
@@ -171,7 +175,7 @@ export function createCollection<T>(
     deleteOne(...args) {
       return _getCollection().deleteOne(...args);
     },
-    async update(model: any, fields) {
+    async update(model: any, fields, options) {
       if (model._id == null) {
         throw new Error('_id not defined');
       }
@@ -181,7 +185,8 @@ export function createCollection<T>(
         },
         {
           $set: R.pick(model, fields),
-        }
+        },
+        options
       );
     },
   };

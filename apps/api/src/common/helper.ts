@@ -1,4 +1,6 @@
 import crypto from 'mz/crypto';
+import { GameModel, GamePlayerInfo } from '../collections/Game';
+import { randomInt } from './random';
 
 export function renameId<T extends { _id: any }>(
   obj: T
@@ -30,8 +32,7 @@ export async function randomString(len: number) {
     'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   let randomString = '';
   for (let i = 0; i < len; i++) {
-    let randomPoz =
-      (await crypto.randomBytes(4)).readUInt32BE(0) % charSet.length;
+    let randomPoz = (await randomInt()) % charSet.length;
     randomString += charSet[randomPoz];
   }
   return randomString;
@@ -43,4 +44,26 @@ export function safeAssign<T>(obj: T, values: Partial<T>) {
 
 export function safeKeys<T>(obj: T): Array<keyof T> {
   return Object.keys(obj) as any;
+}
+
+export async function randomItem<T>(items: T[]) {
+  const idx = (await randomInt()) % items.length;
+  return items[idx];
+}
+
+export function getBlindPlayer(
+  players: GamePlayerInfo[],
+  dealerPosition: number
+) {
+  const dealerPlayer = players.findIndex(x => x.seat === dealerPosition);
+  const sbPlayer = players[(dealerPlayer + 1) % players.length];
+  const bbPlayer = players[(dealerPlayer + 2) % players.length];
+  return {
+    sbPlayer,
+    bbPlayer,
+  };
+}
+
+export function getBlindPlayerFromGame(game: GameModel) {
+  return getBlindPlayer(game.players, game.dealerPosition);
 }
