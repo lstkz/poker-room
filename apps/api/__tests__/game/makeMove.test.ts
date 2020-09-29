@@ -1,6 +1,5 @@
 import { ObjectID } from 'mongodb';
 import { GameCollection } from '../../src/collections/Game';
-import { getCurrentGame } from '../../src/contracts/game/getCurrentGame';
 import { makeMove } from '../../src/contracts/game/makeMove';
 import { disconnect } from '../../src/db';
 import {
@@ -110,7 +109,7 @@ it('should make a legal move', async () => {
   `);
 });
 
-fit('should finish the game', async () => {
+xit('should finish the game', async () => {
   await execContract(
     makeMove,
     {
