@@ -1,16 +1,28 @@
+import * as Rx from 'src/rx';
+import { api } from 'src/services/api';
 import { HomeActions, HomeState, handle } from './interface';
 
 // --- Epic ---
-handle.epic();
+handle
+  .epic()
+  .on(HomeActions.$mounted, () =>
+    api.table_getAllTables().pipe(Rx.map(ret => HomeActions.tablesLoaded(ret)))
+  );
 
 // --- Reducer ---
 const initialState: HomeState = {
-  foo: 'bar',
+  isLoaded: false,
+  tables: [],
 };
 
-handle.reducer(initialState);
+handle
+  .reducer(initialState)
+  .on(HomeActions.tablesLoaded, (state, { tables }) => {
+    state.isLoaded = true;
+    state.tables = tables;
+  });
 
 // --- Module ---
 export function useHomeModule() {
   handle();
-};
+}

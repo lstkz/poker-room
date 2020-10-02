@@ -8,6 +8,7 @@ export interface User {
   id: string;
   username: string;
   isAdmin: boolean;
+  bankroll: number;
 }
 
 export interface AuthData {

@@ -17,7 +17,9 @@ export async function generateAuthData(userId: string): Promise<AuthData> {
     accessToken,
     user: {
       id: user._id.toHexString(),
+      isAdmin: user.isAdmin ?? false,
       username: user.username,
+      bankroll: user.bankroll,
     },
   };
 }
