@@ -7,8 +7,8 @@ interface PlayCardProps {
   card: Card;
 }
 
-const cardWidth = 68;
-const cardHeight = 102;
+export const CARD_WIDTH = 68;
+export const CARD_HEIGHT = 102;
 const xMargin = 11.7;
 const yMargin = 16;
 
@@ -18,8 +18,8 @@ const yCardMargin = 33;
 const Wrapper = styled.div`
   position: relative;
   overflow: hidden;
-  width: ${cardWidth}px;
-  height: ${cardHeight}px;
+  width: ${CARD_WIDTH}px;
+  height: ${CARD_HEIGHT}px;
 `;
 
 export function PlayCard(props: PlayCardProps) {
@@ -29,13 +29,6 @@ export function PlayCard(props: PlayCardProps) {
   let cardIdx = cardOrder.indexOf(props.card.card);
   let colorIdx = colorOrder.indexOf(props.card.color);
 
-  console.log({
-    cardIdx,
-    colorIdx,
-    left: -(xCardMargin + cardIdx * (cardWidth + xMargin)),
-    top: -(yCardMargin + (3 - colorIdx) * (cardHeight + yMargin)),
-  });
-
   return (
     <Wrapper>
       <svg
@@ -44,8 +37,8 @@ export function PlayCard(props: PlayCardProps) {
         width={1066.667}
         style={{
           position: 'absolute',
-          left: -(xCardMargin + cardIdx * (cardWidth + xMargin)),
-          top: -(yCardMargin + (3 - colorIdx) * (cardHeight + yMargin)),
+          left: -(xCardMargin + cardIdx * (CARD_WIDTH + xMargin)),
+          top: -(yCardMargin + (3 - colorIdx) * (CARD_HEIGHT + yMargin)),
         }}
       >
         <PlayCardInner />
