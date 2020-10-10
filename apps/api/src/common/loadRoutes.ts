@@ -32,6 +32,7 @@ export default function loadRoutes(router: Router) {
             id: user._id.toHexString(),
             username: user.username,
             isAdmin: user.isAdmin ?? false,
+            bankroll: user.bankroll,
           };
           next();
         } catch (e) {

@@ -8,6 +8,7 @@ export interface User {
   id: string;
   username: string;
   isAdmin: boolean;
+  bankroll: number;
 }
 
 export interface AuthData {
@@ -44,7 +45,7 @@ export type GamePhaseType = 'pre-flop' | 'flop' | 'turn' | 'river';
 export interface GameMove {
   userId: string;
   moveType: MoveType;
-  amount: number;
+  amount?: number;
 }
 
 export interface GamePhase {
@@ -75,4 +76,5 @@ export interface Game {
   pot: number;
   betMap: Record<string, number>;
   currentBets: number[];
+  currentMovePlayerId: string;
 }

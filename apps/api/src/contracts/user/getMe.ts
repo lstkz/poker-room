@@ -13,6 +13,8 @@ export const getMe = createContract('user.getMe')
     return {
       id: user.id,
       username: user.username,
+      isAdmin: user.isAdmin,
+      bankroll: user.bankroll,
     };
   });
 
