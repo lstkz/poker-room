@@ -1,4 +1,4 @@
-import { ClientSession, ObjectID } from 'mongodb';
+import { ObjectID } from 'mongodb';
 import { S } from 'schema';
 import { Table } from 'shared';
 import { GameCollection, GamePlayerInfo } from '../../collections/Game';
@@ -13,7 +13,7 @@ import {
   safeKeys,
 } from '../../common/helper';
 import { MIN_ENTRY_PERCENT } from '../../config';
-import { startSession } from '../../db';
+import { withTransaction } from '../../db';
 import { dispatch } from '../../events/dispatch';
 import {
   createContract,
@@ -35,56 +35,50 @@ export const joinTable = createContract('table.joinTable')
   })
   .returns<Table>()
   .fn(async (user, values) => {
-    let session: ClientSession = null!;
-    try {
-      session = await startSession();
-      await session.withTransaction(async () => {
-        const [latestUser, table] = await Promise.all([
-          UserCollection.findOneOrThrow({
-            _id: ObjectID.createFromHexString(user.id),
-          }),
-          TableCollection.findOne({
-            _id: ObjectID.createFromHexString(values.tableId),
-          }),
-        ]);
-        if (!table) {
-          throw new TableNotFoundError();
-        }
-        if (values.seat > table.maxSeats) {
-          throw new BadRequestError('Invalid seat');
-        }
-        if (table.players.some(x => x.seat === values.seat)) {
-          throw new BadRequestError('Seat already taken by another player');
-        }
-        if (table.players.some(x => x.userId.equals(latestUser._id))) {
-          throw new BadRequestError('Already joined');
-        }
-        if (latestUser.bankroll < values.money) {
-          throw new BadRequestError('Not enough money');
-        }
-        if (values.money < table.stakes * MIN_ENTRY_PERCENT) {
-          throw new BadRequestError(
-            `Min entry: ${table.stakes * MIN_ENTRY_PERCENT}$`
-          );
-        }
-        if (values.money > table.stakes) {
-          throw new BadRequestError(`Max entry: ${table.stakes}$`);
-        }
+    await withTransaction(async () => {
+      const [latestUser, table] = await Promise.all([
+        UserCollection.findOneOrThrow({
+          _id: ObjectID.createFromHexString(user.id),
+        }),
+        TableCollection.findOne({
+          _id: ObjectID.createFromHexString(values.tableId),
+        }),
+      ]);
+      if (!table) {
+        throw new TableNotFoundError();
+      }
+      if (values.seat > table.maxSeats) {
+        throw new BadRequestError('Invalid seat');
+      }
+      if (table.players.some(x => x.seat === values.seat)) {
+        throw new BadRequestError('Seat already taken by another player');
+      }
+      if (table.players.some(x => x.userId.equals(latestUser._id))) {
+        throw new BadRequestError('Already joined');
+      }
+      if (latestUser.bankroll < values.money) {
+        throw new BadRequestError('Not enough money');
+      }
+      if (values.money < table.stakes * MIN_ENTRY_PERCENT) {
+        throw new BadRequestError(
+          `Min entry: ${table.stakes * MIN_ENTRY_PERCENT}$`
+        );
+      }
+      if (values.money > table.stakes) {
+        throw new BadRequestError(`Max entry: ${table.stakes}$`);
+      }
 
-        latestUser.bankroll -= values.money;
-        table.players.push({
-          money: values.money,
-          seat: values.seat,
-          userId: latestUser._id,
-        });
-        await Promise.all([
-          UserCollection.update(latestUser, ['bankroll']),
-          TableCollection.update(table, ['players']),
-        ]);
+      latestUser.bankroll -= values.money;
+      table.players.push({
+        money: values.money,
+        seat: values.seat,
+        userId: latestUser._id,
       });
-    } finally {
-      await session.endSession();
-    }
+      await Promise.all([
+        UserCollection.update(latestUser, ['bankroll']),
+        TableCollection.update(table, ['players']),
+      ]);
+    });
     dispatch({
       type: 'PLAYER_JOINED',
       payload: {
@@ -104,60 +98,54 @@ export const joinTableRpc = createRpcBinding({
 export const joinTableEvent = createEventBinding({
   type: 'PLAYER_JOINED',
   handler: async payload => {
-    let session: ClientSession = null!;
-    try {
-      session = await startSession();
-      await session.withTransaction(async () => {
-        const table = await TableCollection.findOneOrThrow({
-          _id: ObjectID.createFromHexString(payload.tableId),
-        });
-        const game = await GameCollection.findOneOrThrow({
-          _id: table.gameId,
-        });
-        if (game.isStarted || table.players.length < 3) {
-          return;
-        }
-        const cr = new CardRandomizer();
-        const players = await Promise.all(
-          table.players
-            .sort((a, b) => a.seat - b.seat)
-            .map(async player => {
-              const mapped: GamePlayerInfo = {
-                userId: player.userId,
-                hand: [await cr.randomNextCard(), await cr.randomNextCard()],
-                seat: player.seat,
-                money: player.money,
-              };
-              return mapped;
-            })
-        );
-        const bb = getBB(table.stakes);
-        const dealerPosition = (await randomItem(table.players)).seat;
-        const { sbPlayer, bbPlayer } = getBlindPlayer(players, dealerPosition);
-        const updateValue = {
-          isStarted: true,
-          stakes: table.stakes,
-          currentBets: [bb],
-          players,
-          phases: [{ type: 'pre-flop' as const, moves: [], cards: [] }],
-          dealerPosition,
-          betMap: {
-            [sbPlayer.userId.toHexString()]: bb / 2,
-            [bbPlayer.userId.toHexString()]: bb,
-          },
-        };
-        safeAssign(game, updateValue);
-        await GameCollection.update(game, safeKeys(updateValue));
-        dispatch({
-          type: 'GAME_STARTED',
-          payload: {
-            tableId: payload.tableId,
-            gameId: game._id.toHexString(),
-          },
-        });
+    await withTransaction(async () => {
+      const table = await TableCollection.findOneOrThrow({
+        _id: ObjectID.createFromHexString(payload.tableId),
       });
-    } finally {
-      await session.endSession();
-    }
+      const game = await GameCollection.findOneOrThrow({
+        _id: table.gameId,
+      });
+      if (game.isStarted || table.players.length < 3) {
+        return;
+      }
+      const cr = new CardRandomizer();
+      const players = await Promise.all(
+        table.players
+          .sort((a, b) => a.seat - b.seat)
+          .map(async player => {
+            const mapped: GamePlayerInfo = {
+              userId: player.userId,
+              hand: [await cr.randomNextCard(), await cr.randomNextCard()],
+              seat: player.seat,
+              money: player.money,
+            };
+            return mapped;
+          })
+      );
+      const bb = getBB(table.stakes);
+      const dealerPosition = (await randomItem(table.players)).seat;
+      const { sbPlayer, bbPlayer } = getBlindPlayer(players, dealerPosition);
+      const updateValue = {
+        isStarted: true,
+        stakes: table.stakes,
+        currentBets: [bb],
+        players,
+        phases: [{ type: 'pre-flop' as const, moves: [], cards: [] }],
+        dealerPosition,
+        betMap: {
+          [sbPlayer.userId.toHexString()]: bb / 2,
+          [bbPlayer.userId.toHexString()]: bb,
+        },
+      };
+      safeAssign(game, updateValue);
+      await GameCollection.update(game, safeKeys(updateValue));
+      dispatch({
+        type: 'GAME_STARTED',
+        payload: {
+          tableId: payload.tableId,
+          gameId: game._id.toHexString(),
+        },
+      });
+    });
   },
 });

@@ -1,4 +1,5 @@
 import { ObjectID } from 'mongodb';
+import { TableCollection } from '../../src/collections/Table';
 import { UserCollection } from '../../src/collections/User';
 import { joinTable } from '../../src/contracts/table/joinTable';
 import { disconnect } from '../../src/db';
@@ -254,4 +255,34 @@ it('two user should join the table successfully', async () => {
       "stakes": 50,
     }
   `);
+});
+
+it('three users should join the table successfully in parallel', async () => {
+  await Promise.all([
+    execContract(
+      joinTable,
+      {
+        values: validValues,
+      },
+      'token_1'
+    ),
+    execContract(
+      joinTable,
+      {
+        values: { ...validValues, seat: 2 },
+      },
+      'token_2'
+    ),
+    execContract(
+      joinTable,
+      {
+        values: { ...validValues, seat: 3 },
+      },
+      'token_3'
+    ),
+  ]);
+  const table = await TableCollection.findOne({
+    _id: ObjectID.createFromHexString(getTestTableId(1)),
+  });
+  expect(table?.players).toHaveLength(3);
 });

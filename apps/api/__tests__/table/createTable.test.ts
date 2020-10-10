@@ -27,8 +27,8 @@ it('should return an empty array if no tables', async () => {
     },
     'token_1'
   );
-  const tables = await TableCollection.find({}).toArray();
-  const games = await GameCollection.find({}).toArray();
+  const tables = await (await TableCollection.find({})).toArray();
+  const games = await (await GameCollection.find({})).toArray();
   expect(tables).toHaveLength(1);
   expect(games).toHaveLength(1);
   const [table] = tables;

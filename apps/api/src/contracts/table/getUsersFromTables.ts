@@ -7,9 +7,9 @@ async function _getUsersByIds(ids: ObjectID[]): Promise<UserModel[]> {
   if (!ids.length) {
     return [];
   }
-  return UserCollection.find({
+  return await UserCollection.find({
     _id: { $in: ids },
-  }).toArray();
+  }).then(x => x.toArray());
 }
 
 export async function getUsersFromTables(items: TableModel[]) {
