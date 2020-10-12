@@ -25,11 +25,11 @@ export const getCurrentGame = createContract('game.getCurrentGame')
     }
     const playerIds = table.players.map(x => x.userId);
     const players: UserModel[] = playerIds.length
-      ? await UserCollection.find({
+      ? await UserCollection.findAll({
           _id: {
             $in: playerIds,
           },
-        }).toArray()
+        })
       : [];
     const playerMap = R.indexBy(players, x => x._id);
     const game = await GameCollection.findOneOrThrow({ _id: table.gameId });

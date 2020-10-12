@@ -1,12 +1,10 @@
 import * as R from 'remeda';
 import Path from 'path';
 import fs from 'fs';
+import { AsyncLocalStorage } from 'async_hooks';
 import { MONGO_URL, MONGO_DB_NAME } from './config';
 import {
   MongoClient,
-  CollectionAggregationOptions,
-  AggregationCursor,
-  MongoCallback,
   FilterQuery,
   MongoCountPreferences,
   FindOneOptions,
@@ -25,7 +23,10 @@ import {
   CollectionInsertManyOptions,
   OptionalId,
   WithId,
+  ClientSession,
 } from 'mongodb';
+
+const dbSessionStorage = new AsyncLocalStorage<ClientSession>();
 
 let client: MongoClient | null = null;
 
@@ -45,11 +46,22 @@ export async function connect() {
   return client;
 }
 
-export async function startSession() {
+async function startSession() {
   if (!client) {
     throw new Error('Not connected');
   }
   return client.startSession();
+}
+
+export async function withTransaction<T extends () => Promise<R>, R>(fn: T) {
+  const session = await startSession();
+  try {
+    return await dbSessionStorage.run(session, async () => {
+      return session.withTransaction(fn);
+    });
+  } finally {
+    session.endSession();
+  }
 }
 
 function getClient() {
@@ -60,11 +72,10 @@ function getClient() {
 }
 
 interface DbCollection<TSchema> {
-  aggregate<T>(
-    pipeline?: object[],
-    options?: CollectionAggregationOptions,
-    callback?: MongoCallback<AggregationCursor<T>>
-  ): AggregationCursor<T>;
+  // aggregate<T>(
+  //   pipeline?: object[],
+  //   options?: CollectionAggregationOptions
+  // ): AggregationCursor<T>;
   insertOne(
     docs: OptionalId<TSchema>,
     options?: CollectionInsertOneOptions
@@ -80,7 +91,11 @@ interface DbCollection<TSchema> {
   find<T = TSchema>(
     query: FilterQuery<TSchema>,
     options?: FindOneOptions<T extends TSchema ? TSchema : T>
-  ): Cursor<T>;
+  ): Promise<Cursor<T>>;
+  findAll<T = TSchema>(
+    query: FilterQuery<TSchema>,
+    options?: FindOneOptions<T extends TSchema ? TSchema : T>
+  ): Promise<T[]>;
   findOne<T = TSchema>(
     filter: FilterQuery<TSchema>,
     options?: FindOneOptions<T extends TSchema ? TSchema : T>
@@ -132,27 +147,47 @@ export function createCollection<T>(
     return db.collection<T>(collectionName);
   };
 
+  const exec = async (
+    name: Exclude<keyof DbCollection<any>, 'findOneOrThrow' | 'findAll'>,
+    n: 2 | 3,
+    args: any[]
+  ) => {
+    if (n === 2) {
+      if (!args[1]) {
+        args[1] = {};
+      }
+    } else {
+      if (!args[2]) {
+        args[2] = {};
+      }
+    }
+    args[args.length - 1]!.session = await dbSessionStorage.getStore();
+    const collection = _getCollection();
+    const fn: any = collection[name].bind(collection);
+    return fn(...args);
+  };
+
   const ret: DbCollection<T> = {
-    aggregate(...args) {
-      return _getCollection().aggregate(...args);
-    },
     insertOne(...args) {
-      return _getCollection().insertOne(...args);
+      return exec('insertOne', 2, args);
     },
     insertMany(...args) {
-      return _getCollection().insertMany(...args);
+      return exec('insertMany', 2, args);
     },
     countDocuments(...args) {
-      return _getCollection().countDocuments(...args);
+      return exec('countDocuments', 2, args);
     },
     find(...args) {
-      return _getCollection().find(...args);
+      return exec('find', 2, args);
+    },
+    async findAll(...args) {
+      return (await this.find(...args)).toArray();
     },
     findOne(...args) {
-      return _getCollection().findOne(...args);
+      return exec('findOne', 2, args);
     },
     async findOneOrThrow(...args) {
-      const ret = await _getCollection().findOne(...args);
+      const ret = exec('findOne', 2, args);
       if (!ret) {
         throw new Error(
           `Entity ${JSON.stringify(args[0])} not found in ${collectionName}`
@@ -161,19 +196,19 @@ export function createCollection<T>(
       return ret;
     },
     findOneAndDelete(...args) {
-      return _getCollection().findOneAndDelete(...args);
+      return exec('findOneAndDelete', 2, args);
     },
     findOneAndReplace(...args) {
-      return _getCollection().findOneAndReplace(...args);
+      return exec('findOneAndReplace', 3, args);
     },
     findOneAndUpdate(...args) {
-      return _getCollection().findOneAndUpdate(...args);
+      return exec('findOneAndUpdate', 3, args);
     },
     deleteMany(...args) {
-      return _getCollection().deleteMany(...args);
+      return exec('deleteMany', 2, args);
     },
     deleteOne(...args) {
-      return _getCollection().deleteOne(...args);
+      return exec('deleteOne', 2, args);
     },
     async update(model: any, fields, options) {
       if (model._id == null) {

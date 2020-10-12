@@ -7,7 +7,9 @@ export const getAll = createContract('example.getAll')
   .params()
   .returns<Foo[]>()
   .fn(async () => {
-    const result = await FooTestCollection.find({}).limit(100).toArray();
+    const result = await (await FooTestCollection.find({}))
+      .limit(100)
+      .toArray();
     return result.map(renameId);
   });
 

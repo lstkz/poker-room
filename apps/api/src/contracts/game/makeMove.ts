@@ -1,4 +1,4 @@
-import { ClientSession, ObjectID } from 'mongodb';
+import { ObjectID } from 'mongodb';
 import { S } from 'schema';
 import { MoveType, moveTypes } from 'shared';
 import { GameCollection } from '../../collections/Game';
@@ -8,7 +8,7 @@ import {
   processNextPhase,
 } from '../../common/engine';
 import { BadRequestError } from '../../common/errors';
-import { startSession } from '../../db';
+import { withTransaction } from '../../db';
 import { dispatch } from '../../events/dispatch';
 import { createContract, createRpcBinding } from '../../lib';
 import { AppUser } from '../../types';
@@ -26,37 +26,31 @@ export const makeMove = createContract('game.makeMove')
   })
   .returns<void>()
   .fn(async (user, values) => {
-    let session: ClientSession = null!;
-    try {
-      session = await startSession();
-      await session.withTransaction(async () => {
-        const game = await GameCollection.findOneOrThrow({
-          _id: ObjectID.createFromHexString(values.gameId),
-        });
-        if (game.isDone) {
-          throw new BadRequestError('Game is finished');
-        }
-        const actPlayer = getActPlayer(game);
-        if (!actPlayer.userId.equals(user.id)) {
-          throw new BadRequestError("It's not your turn");
-        }
-        processMove(
-          {
-            moveType: values.moveType,
-            raiseAmount: values.raiseAmount,
-          },
-          game
-        );
-        await processNextPhase(game);
-        await GameCollection.update(game, safeKeys(game));
-        dispatch({
-          type: 'GAME_UPDATED',
-          payload: { gameId: game._id.toHexString() },
-        });
+    await withTransaction(async () => {
+      const game = await GameCollection.findOneOrThrow({
+        _id: ObjectID.createFromHexString(values.gameId),
       });
-    } finally {
-      await session.endSession();
-    }
+      if (game.isDone) {
+        throw new BadRequestError('Game is finished');
+      }
+      const actPlayer = getActPlayer(game);
+      if (!actPlayer.userId.equals(user.id)) {
+        throw new BadRequestError("It's not your turn");
+      }
+      processMove(
+        {
+          moveType: values.moveType,
+          raiseAmount: values.raiseAmount,
+        },
+        game
+      );
+      await processNextPhase(game);
+      await GameCollection.update(game, safeKeys(game));
+      dispatch({
+        type: 'GAME_UPDATED',
+        payload: { gameId: game._id.toHexString() },
+      });
+    });
   });
 
 export const makeMoveRpc = createRpcBinding({
