@@ -48,10 +48,16 @@ export function TableView() {
   useTableModule();
   useJoinForm();
   const user = useUser();
-  const { isLoaded, table } = getTableState.useState();
-  const game = games[1];
+  const { isLoaded, table, game } = getTableState.useState();
+  // const game = games[1];
   const { showJoinTable } = useActions(TableActions);
-  const { seatMap, foldedMap, cards, currentPlayer } = useGameState(user, game);
+  const {
+    gameSeatMap,
+    tableSeatMap,
+    foldedMap,
+    cards,
+    currentPlayer,
+  } = useGameState(user, table, game);
 
   if (!isLoaded) {
     return <div>loading...</div>;
@@ -72,13 +78,14 @@ export function TableView() {
         <PotWrapper>Pot: ${game.pot}</PotWrapper>
         <GameCards cards={cards} />
         {R.range(1, table.maxSeats + 1).map(seat => {
-          const player = seatMap[seat];
+          const gamePlayer = gameSeatMap[seat];
+          const tablePlayer = tableSeatMap[seat];
           return (
             <GameSeat
-              bet={player && game.betMap[player.user.id]}
+              bet={gamePlayer && game.betMap[gamePlayer.user.id]}
               isDealer={seat === game.dealerPosition}
-              isPlaying={player && !foldedMap[player.user.id]}
-              player={player}
+              isPlaying={gamePlayer && !foldedMap[gamePlayer.user.id]}
+              player={tablePlayer}
               seat={seat}
               key={seat}
               join={() => showJoinTable(seat)}

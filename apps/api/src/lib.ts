@@ -56,7 +56,8 @@ export function createEventBinding<T extends AppEventType>(
 }
 
 export const { createContract } = initialize({
-  debug: LOG_LEVEL === 'debug',
+  // debug: LOG_LEVEL === 'debug',
+  debug: false,
 });
 
 declare module 'schema/src/StringSchema' {

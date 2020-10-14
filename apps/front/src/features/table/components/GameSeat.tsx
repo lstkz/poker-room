@@ -1,13 +1,13 @@
 import * as React from 'react';
 import * as R from 'remeda';
-import { GamePlayerInfo } from 'shared';
+import { TablePlayer } from 'shared';
 import { Button } from 'src/components/Button';
 import styled from 'styled-components';
 
 interface GameSeatProps {
   className?: string;
   seat: number;
-  player: GamePlayerInfo | null;
+  player: TablePlayer | null;
   join(): void;
   isPlaying: boolean;
   isDealer: boolean;

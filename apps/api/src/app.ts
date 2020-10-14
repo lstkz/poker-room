@@ -10,6 +10,7 @@ import { domainMiddleware } from './middlewares/domainMiddleware';
 import { errorHandlerMiddleware } from './middlewares/errorHandlerMiddleware';
 import { notFoundHandlerMiddleware } from './middlewares/notFoundHandlerMiddleware';
 import loadRoutes from './common/loadRoutes';
+import { initSocket } from './socket';
 
 connect().then(async () => {
   await initIndexes();
@@ -26,6 +27,7 @@ connect().then(async () => {
   app.use(errorHandlerMiddleware);
   app.use(notFoundHandlerMiddleware);
   const server = http.createServer(app);
+  initSocket(server);
   server.listen(app.get('port'), '0.0.0.0', () => {
     logger.info(
       `Express HTTP server listening on port ${app.get('port')} in ${

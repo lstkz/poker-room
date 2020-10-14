@@ -26,7 +26,9 @@ export function JoinModal() {
         <JoinFormProvider>
           <FormInput name="amount" label="amount" />
 
-          <Button htmlType="submit">Join</Button>
+          <Button htmlType="submit" disabled={join.isDisabled}>
+            Join
+          </Button>
         </JoinFormProvider>
       </form>
     </Modal>

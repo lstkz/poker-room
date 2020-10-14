@@ -15,6 +15,7 @@ const bindings = [
   require('../contracts/table/leaveTable'),
   require('../contracts/table/getTableById'),
   require('../contracts/table/createTable'),
+  require('../contracts/table/notifySocket'),
   require('../contracts/game/getCurrentGame'),
   require('../contracts/game/makeMove'),
   require('../contracts/example/createFoo'),

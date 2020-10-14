@@ -9,6 +9,7 @@ export const [handle, TableActions, getTableState] = createModule(TableSymbol)
     tableLoaded: (table: Table, game: Game) => ({ payload: { table, game } }),
     showJoinTable: (seat: number) => ({ payload: { seat } }),
     hideJoinTable: null,
+    setJoinDisabled: (isDisabled: boolean) => ({ payload: { isDisabled } }),
   })
   .withState<TableState>();
 
@@ -19,6 +20,7 @@ export interface TableState {
   game: Game;
   join: {
     isVisible: boolean;
+    isDisabled: boolean;
     seat: number;
   };
 }
