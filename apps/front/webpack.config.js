@@ -44,6 +44,9 @@ module.exports = {
       '/api': {
         target: process.env.API_URL || 'http://localhost:3000',
       },
+      '/socket.io': {
+        target: process.env.API_URL || 'http://localhost:3000',
+      },
     },
   },
   resolve: {

@@ -1,22 +1,25 @@
 import React from 'react';
 import * as R from 'remeda';
-import { Card, Game, GamePlayerInfo, User } from 'shared';
+import { Card, Game, GamePlayerInfo, Table, TablePlayer, User } from 'shared';
 
 export function useGameState(
   user: User,
+  table: Table | null,
   game: Game | null
 ): {
   cards: Card[];
   foldedMap: Record<string, boolean>;
-  seatMap: Record<string, GamePlayerInfo>;
+  gameSeatMap: Record<string, GamePlayerInfo>;
+  tableSeatMap: Record<string, TablePlayer>;
   currentPlayer?: GamePlayerInfo | undefined;
 } {
   return React.useMemo(() => {
-    if (!game) {
+    if (!game || !table) {
       return {
         cards: [],
         foldedMap: {},
-        seatMap: {},
+        gameSeatMap: {},
+        tableSeatMap: {},
       };
     }
 
@@ -32,7 +35,8 @@ export function useGameState(
     return {
       cards: R.flatMap(game.phases, item => item.cards),
       foldedMap,
-      seatMap: R.indexBy(game.players, x => x.seat),
+      gameSeatMap: R.indexBy(game.players, x => x.seat),
+      tableSeatMap: R.indexBy(table.players, x => x.seat),
       currentPlayer,
     };
   }, [game]);

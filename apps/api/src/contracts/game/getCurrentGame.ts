@@ -9,14 +9,14 @@ import { createContract, createRpcBinding } from '../../lib';
 import { AppUser } from '../../types';
 import { UserCollection, UserModel } from '../../collections/User';
 
-export const getCurrentGame = createContract('game.getCurrentGame')
-  .params('user', 'tableId')
+export const getCurrentGameForUser = createContract('game.getCurrentGame')
+  .params('userId', 'tableId')
   .schema({
-    user: S.object().as<AppUser>(),
+    userId: S.string().objectId().nullable(),
     tableId: S.string().objectId(),
   })
   .returns<Game>()
-  .fn(async (user, tableId) => {
+  .fn(async (userId, tableId) => {
     const table = await TableCollection.findOne({
       _id: ObjectID.createFromHexString(tableId),
     });
@@ -45,6 +45,7 @@ export const getCurrentGame = createContract('game.getCurrentGame')
         'betMap',
         'currentBets',
       ]),
+      currentMovePlayerId: 'todo',
       phases: game.phases.map(item => ({
         cards: item.cards,
         moves: item.moves.map(move => ({
@@ -59,11 +60,22 @@ export const getCurrentGame = createContract('game.getCurrentGame')
           id: item.userId.toHexString(),
           username: playerMap[item.userId.toHexString()].username,
         },
-        hand: item.userId.equals(user.id) ? item.hand : null,
+        hand: userId && item.userId.equals(userId) ? item.hand : null,
         money: item.money,
         seat: item.seat,
       })),
     };
+  });
+
+export const getCurrentGame = createContract('game.getCurrentGame')
+  .params('user', 'tableId')
+  .schema({
+    user: S.object().as<AppUser>(),
+    tableId: S.string().objectId(),
+  })
+  .returns<Game>()
+  .fn(async (user, tableId) => {
+    return getCurrentGameForUser(user.id, tableId);
   });
 
 export const getCurrentGameRpc = createRpcBinding({

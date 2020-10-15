@@ -1,4 +1,4 @@
-import { User } from 'shared';
+import { Game, Table, User } from 'shared';
 import { createModule } from 'typeless';
 import { GlobalSymbol } from './symbol';
 
@@ -11,6 +11,7 @@ export const [handle, GlobalActions, getGlobalState] = createModule(
     loaded: (user: User | null) => ({ payload: { user } }),
     loggedIn: (user: User) => ({ payload: { user } }),
     logout: null,
+    gameUpdated: (game: Game, table?: Table) => ({ payload: { game, table } }),
   })
   .withState<GlobalState>();
 
