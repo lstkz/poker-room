@@ -8,6 +8,7 @@ import { TableNotFoundError } from '../../common/errors';
 import { createContract, createRpcBinding } from '../../lib';
 import { AppUser } from '../../types';
 import { UserCollection, UserModel } from '../../collections/User';
+import { getActPlayer } from '../../common/engine';
 
 export const getCurrentGameForUser = createContract('game.getCurrentGame')
   .params('userId', 'tableId')
@@ -45,7 +46,7 @@ export const getCurrentGameForUser = createContract('game.getCurrentGame')
         'betMap',
         'currentBets',
       ]),
-      currentMovePlayerId: 'todo',
+      currentMovePlayerId: getActPlayer(game)?.userId.toHexString() ?? null,
       phases: game.phases.map(item => ({
         cards: item.cards,
         moves: item.moves.map(move => ({

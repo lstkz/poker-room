@@ -30,16 +30,13 @@ export function initSocket(server: http.Server) {
 
   io.use(async (socket, next) => {
     try {
-      console.log('auth', socket.id);
       const tokenEntity = await AccessTokenCollection.findOne({
         _id: socket.handshake.query.accessToken,
       });
       if (!tokenEntity) {
         return next(new Error('authentication error'));
       }
-      console.log({ tokenEntity });
       socketUserIdMap[socket.id] = tokenEntity.userId;
-      console.log(socketUserIdMap);
       next();
     } catch (e) {
       return next(e);
@@ -47,7 +44,6 @@ export function initSocket(server: http.Server) {
   });
 
   io.on('connect', socket => {
-    console.log('connect', socket.id);
     const userId = socketUserIdMap[socket.id];
     if (!userSocketMap[userId]) {
       userSocketMap[userId] = [];
@@ -66,7 +62,6 @@ export function initSocket(server: http.Server) {
         userTableMap[data.id] = [];
       }
       userTableMap[data.id].push(socket);
-      console.log('join-table', userTableMap);
     });
     socket.on('leave-table', data => {
       _removeArrayItem(userTableMap[data.id], socket);

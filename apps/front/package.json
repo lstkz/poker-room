@@ -14,6 +14,7 @@
   "dependencies": {
     "@types/react": "^16.9.2",
     "@types/react-dom": "^16.9.0",
+    "@types/react-slider": "^1.0.0",
     "@types/socket.io-client": "^1.4.34",
     "@types/typed.js": "^2.0.9",
     "@types/webpack-env": "^1.14.0",
@@ -22,8 +23,10 @@
     "css-loader": "^3.2.0",
     "file-loader": "^4.2.0",
     "html-webpack-plugin": "^3.2.0",
+    "rc-slider": "^9.5.3",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
+    "react-slider": "^1.0.11",
     "remeda": "^0.0.20",
     "rxjs": "^6.3.3",
     "socket.io-client": "^2.3.1",

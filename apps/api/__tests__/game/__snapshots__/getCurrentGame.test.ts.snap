@@ -9,6 +9,7 @@ Object {
   "currentBets": Array [
     0.5,
   ],
+  "currentMovePlayerId": "000000000000000000000001",
   "dealerPosition": 1,
   "id": "200000000000000000000001",
   "isDone": false,
@@ -68,6 +69,7 @@ exports[`should return a game with no players 1`] = `
 Object {
   "betMap": Object {},
   "currentBets": Array [],
+  "currentMovePlayerId": null,
   "dealerPosition": -1,
   "id": "200000000000000000000001",
   "isDone": false,

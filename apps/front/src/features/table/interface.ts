@@ -1,4 +1,4 @@
-import { Game, Table } from 'shared';
+import { Game, MoveType, Table } from 'shared';
 import { createModule } from 'typeless';
 import { TableSymbol } from './symbol';
 
@@ -10,6 +10,10 @@ export const [handle, TableActions, getTableState] = createModule(TableSymbol)
     showJoinTable: (seat: number) => ({ payload: { seat } }),
     hideJoinTable: null,
     setJoinDisabled: (isDisabled: boolean) => ({ payload: { isDisabled } }),
+    leaveTable: null,
+    makeMove: (moveType: MoveType, raiseAmount?: number) => ({
+      payload: { moveType, raiseAmount },
+    }),
   })
   .withState<TableState>();
 

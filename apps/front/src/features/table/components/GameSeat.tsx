@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as R from 'remeda';
-import { TablePlayer } from 'shared';
+import { GameMove, TablePlayer } from 'shared';
 import { Button } from 'src/components/Button';
 import styled from 'styled-components';
 
@@ -11,7 +11,10 @@ interface GameSeatProps {
   join(): void;
   isPlaying: boolean;
   isDealer: boolean;
+  isCurrentPlayer: boolean;
   bet: number | undefined;
+  moves: GameMove[];
+  currentMovePlayerId: string;
 }
 
 const positions = [
@@ -147,9 +150,30 @@ const BetWrapper = styled.div`
   position: absolute;
 `;
 
+const LastMove = styled.div`
+  text-align: center;
+  font-weight: 500;
+`;
+
 const _GameSeat = (props: GameSeatProps) => {
-  const { className, seat, join, player, isPlaying, isDealer, bet } = props;
+  const {
+    className,
+    seat,
+    join,
+    player,
+    isPlaying,
+    isDealer,
+    bet,
+    moves,
+    currentMovePlayerId,
+  } = props;
   const position = positions[seat - 1];
+  const lastPlayerMove = React.useMemo(() => {
+    if (!player || player.user.id === currentMovePlayerId) {
+      return null;
+    }
+    return [...moves].reverse().find(x => x.userId === player?.user.id);
+  }, [moves, currentMovePlayerId]);
   const renderContent = () => {
     if (!player) {
       return <Button onClick={join}>Seat {seat}</Button>;
@@ -166,6 +190,7 @@ const _GameSeat = (props: GameSeatProps) => {
         )}
         {player.user.username}
         <MoneyWrapper>${player.money - (bet ?? 0)}</MoneyWrapper>
+        {lastPlayerMove && <LastMove>{lastPlayerMove.moveType}</LastMove>}
       </PlayerInfo>
     );
   };
@@ -179,7 +204,7 @@ const _GameSeat = (props: GameSeatProps) => {
 export const GameSeat = styled(_GameSeat)`
   display: block;
   position: absolute;
-  border: 2px solid white;
+  border: 2px solid ${props => (props.isCurrentPlayer ? '#666' : 'white')};
   border-radius: 4px;
   padding: 10px 15px;
 `;

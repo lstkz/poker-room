@@ -1,7 +1,7 @@
 import { ObjectID } from 'mongodb';
 import { S } from 'schema';
 import { MoveType, moveTypes } from 'shared';
-import { GameCollection } from '../../collections/Game';
+import { GameCollection, GameModel } from '../../collections/Game';
 import {
   getActPlayer,
   processMove,
@@ -26,14 +26,18 @@ export const makeMove = createContract('game.makeMove')
   })
   .returns<void>()
   .fn(async (user, values) => {
+    let game: GameModel = null!;
     await withTransaction(async () => {
-      const game = await GameCollection.findOneOrThrow({
+      game = await GameCollection.findOneOrThrow({
         _id: ObjectID.createFromHexString(values.gameId),
       });
       if (game.isDone) {
         throw new BadRequestError('Game is finished');
       }
-      const actPlayer = getActPlayer(game);
+      if (!game.isStarted) {
+        throw new BadRequestError('Game is not started');
+      }
+      const actPlayer = getActPlayer(game)!;
       if (!actPlayer.userId.equals(user.id)) {
         throw new BadRequestError("It's not your turn");
       }
@@ -46,10 +50,13 @@ export const makeMove = createContract('game.makeMove')
       );
       await processNextPhase(game);
       await GameCollection.update(game, safeKeys(game));
-      dispatch({
-        type: 'GAME_UPDATED',
-        payload: { gameId: game._id.toHexString() },
-      });
+    });
+    dispatch({
+      type: 'GAME_UPDATED',
+      payload: {
+        gameId: game._id.toHexString(),
+        tableId: game.tableId.toHexString(),
+      },
     });
   });
 
