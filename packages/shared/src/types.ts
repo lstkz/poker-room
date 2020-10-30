@@ -76,5 +76,5 @@ export interface Game {
   pot: number;
   betMap: Record<string, number>;
   currentBets: number[];
-  currentMovePlayerId: string;
+  currentMovePlayerId: string | null;
 }

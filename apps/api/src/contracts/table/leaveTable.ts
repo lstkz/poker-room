@@ -5,6 +5,7 @@ import { TableCollection } from '../../collections/Table';
 import { UserCollection } from '../../collections/User';
 import { BadRequestError, TableNotFoundError } from '../../common/errors';
 import { withTransaction } from '../../db';
+import { dispatch } from '../../events/dispatch';
 import { createContract, createRpcBinding } from '../../lib';
 import { AppUser } from '../../types';
 import { getTableById } from './getTableById';
@@ -43,6 +44,13 @@ export const leaveTable = createContract('table.leaveTable')
         UserCollection.update(latestUser, ['bankroll']),
         TableCollection.update(table, ['players']),
       ]);
+    });
+    dispatch({
+      type: 'PLAYER_LEFT',
+      payload: {
+        tableId: values.tableId,
+        userId: user.id,
+      },
     });
     return getTableById(values.tableId);
   });

@@ -1,5 +1,5 @@
 import * as R from 'remeda';
-import { Card, MoveType } from 'shared';
+import { Card, getMinRaiseAmount, MoveType } from 'shared';
 import { GameModel } from '../collections/Game';
 import { InvalidMoveError, UnreachableCaseError } from './errors';
 import { getBlindPlayerFromGame } from './helper';
@@ -42,18 +42,24 @@ export class CardRandomizer {
 }
 
 export function getActPlayer(game: GameModel) {
+  if (!game.players.length) {
+    return null;
+  }
   const phase = R.last(game.phases)!;
   const lastMove = R.last(phase.moves);
   const getPlayer = (idx: number) => game.players[idx % game.players.length];
 
+  const skipPlayers = R.pipe(
+    game.phases,
+    R.flatMap(p => p.moves),
+    R.filter(x => x.moveType === 'all-in' || x.moveType === 'fold'),
+    R.map(x => x.userId.toHexString()),
+    x => new Set(x)
+  );
+
   if (lastMove) {
     const lastPlayerIdx = game.players.findIndex(x =>
       x.userId.equals(lastMove.userId)
-    );
-    const skipPlayers = new Set(
-      phase.moves
-        .filter(x => x.moveType === 'all-in' || x.moveType === 'fold')
-        .map(x => x.userId.toHexString())
     );
     for (let i = 1; i < game.players.length; i++) {
       const nextPlayerIdx = (lastPlayerIdx + i) % game.players.length;
@@ -62,7 +68,6 @@ export function getActPlayer(game: GameModel) {
         return player;
       }
     }
-    throw new Error('Cannot get next act player');
   } else {
     const dealerPlayerIdx = game.players.findIndex(
       x => x.seat === game.dealerPosition
@@ -71,30 +76,14 @@ export function getActPlayer(game: GameModel) {
       phase.type === 'pre-flop'
         ? 3 // utg-1
         : 1; // sb;
-    return getPlayer(dealerPlayerIdx + posDiff);
+    for (let i = 0; i < game.players.length; i++) {
+      const player = getPlayer(dealerPlayerIdx + posDiff + i);
+      if (!skipPlayers.has(player.userId.toHexString())) {
+        return player;
+      }
+    }
   }
-}
-
-export function getBB(stakesOrGame: number | GameModel) {
-  const stakes =
-    typeof stakesOrGame === 'number' ? stakesOrGame : stakesOrGame.stakes;
-  return stakes / 100;
-}
-
-export function getMinRaiseAmount(game: GameModel) {
-  const bb = getBB(game);
-  if (!game.currentBets.length) {
-    return bb;
-  }
-  if (game.currentBets.length === 1) {
-    // bb: 0.5$
-    // raise: 5$
-    // min re-raise: 9.5$
-    return game.currentBets[0] * 2 - bb;
-  }
-  const last = R.last(game.currentBets)!;
-  const diff = last - game.currentBets[game.currentBets.length - 2];
-  return last + diff;
+  throw new Error('Cannot get next act player');
 }
 
 export function validateMove(
@@ -226,7 +215,7 @@ export function processMove(
 
 function getCurrentBet(game: GameModel) {
   if (!game.currentBets.length) {
-    return getBB(game);
+    return 0;
   }
   return R.last(game.currentBets);
 }
@@ -265,7 +254,10 @@ export async function processNextPhase(game: GameModel) {
       return;
     }
   }
-  if (!playingPlayers.every(playerId => game.betMap[playerId] === currentBet)) {
+  if (
+    currentBet &&
+    !playingPlayers.every(playerId => game.betMap[playerId] === currentBet)
+  ) {
     return;
   }
   const cr = getCardRandomizer(game);

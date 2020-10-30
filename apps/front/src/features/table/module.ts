@@ -44,6 +44,22 @@ handle
         .pipe(Rx.map(() => TableActions.hideJoinTable())),
       Rx.of(TableActions.setJoinDisabled(false))
     );
+  })
+  .on(TableActions.leaveTable, () => {
+    return api
+      .table_leaveTable({
+        tableId: getTableId(),
+      })
+      .pipe(Rx.ignoreElements());
+  })
+  .on(TableActions.makeMove, ({ moveType, raiseAmount }) => {
+    return api
+      .game_makeMove({
+        gameId: getTableState().game.id,
+        moveType,
+        raiseAmount,
+      })
+      .pipe(Rx.ignoreElements());
   });
 
 // --- Reducer ---

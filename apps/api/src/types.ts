@@ -17,12 +17,16 @@ export type AppEvent =
       payload: { tableId: string; userId: string };
     }
   | {
+      type: 'PLAYER_LEFT';
+      payload: { tableId: string; userId: string };
+    }
+  | {
       type: 'GAME_STARTED';
       payload: { tableId: string; gameId: string };
     }
   | {
       type: 'GAME_UPDATED';
-      payload: { gameId: string };
+      payload: { gameId: string; tableId: string };
     };
 
 type ExtractType<T> = T extends { type: infer S } ? S : never;
